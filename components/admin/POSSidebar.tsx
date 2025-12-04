@@ -6,7 +6,6 @@ import {
   User,
   Receipt,
   FileText,
-  Settings,
 } from "lucide-react";
 
 const menuItems = [

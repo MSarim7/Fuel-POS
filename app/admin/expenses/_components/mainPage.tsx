@@ -153,7 +153,7 @@ const Expenses = () => {
             <div className="flex justify-center mb-2">
               <TrendingUp className="h-6 w-6 text-[#06b6d4]" />
             </div>
-            <p className="text-sm text-[#64748b]">Today's Expenses</p>
+            <p className="text-sm text-[#64748b]">Today&apos;s Expenses</p>
             <p className="text-2xl font-bold text-[#020617]">{todayExpenses}</p>
           </CardContent>
         </Card>

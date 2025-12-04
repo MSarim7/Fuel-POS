@@ -74,7 +74,7 @@ const Stock = () => {
             <div className="flex justify-center mb-2">
               <ShoppingCart className="h-6 w-6 text-[#06b6d4]" />
             </div>
-            <p className="text-sm text-[#64748b]">Today's Purchases</p>
+            <p className="text-sm text-[#64748b]">Today&apos;s Purchases</p>
             <p className="text-2xl font-bold text-[#020617]">{todaysPurchases}</p>
           </CardContent>
         </Card>

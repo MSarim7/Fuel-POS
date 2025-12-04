@@ -15,19 +15,14 @@ import {
 import {
   DollarSign,
   Fuel,
-  TrendingUp,
-  TrendingDown,
   AlertTriangle,
   ArrowUpRight,
-  ArrowDownRight,
   Package,
   Activity,
   CreditCard,
   Wallet
 } from "lucide-react";
 import {
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -83,7 +78,7 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-[#020617]">Dashboard Overview</h1>
-          <p className="text-[#64748b]">Welcome back! Here's what's happening today.</p>
+          <p className="text-[#64748b]">Welcome back! Here&apos;s what&apos;s happening today.</p>
         </div>
 
       </div>
