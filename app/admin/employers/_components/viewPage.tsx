@@ -1,0 +1,188 @@
+"use client";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+type EmployerData = {
+  employerId: string;
+  fullName: string;
+  email: string;
+  mobile: string;
+  address: string;
+  fuelPump: string;
+  status: "active" | "inactive";
+  salary: string;
+  advanceSalary?: string;
+  joiningDate: string;
+  notes?: string;
+};
+
+const EmployerView = ({ data }: { data: EmployerData }) => {
+  const router = useRouter();
+  const employer = data;
+
+  return (
+    <div className="p-6 bg-white min-h-screen">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => router.push("/admin/employers")}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+          <h1 className="text-xl font-semibold text-[#020617]">Employer Details</h1>
+        </div>
+        <Button
+          onClick={() => router.push(`/admin/employers/${employer.employerId}/edit`)}
+          className="bg-[#14b8a6] hover:bg-[#0d9488] text-white rounded-md px-4 py-2"
+        >
+          Edit
+        </Button>
+      </div>
+
+      {/* Details Card */}
+      <Card className="p-6 bg-white shadow-sm border rounded-xl space-y-6">
+        {/* Section: Basic Information */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-[#020617] border-b pb-2">
+            Basic Information
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Employer ID
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {employer.employerId}
+              </span>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Full Name
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {employer.fullName}
+              </span>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Email
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {employer.email}
+              </span>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Mobile Number
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {employer.mobile}
+              </span>
+            </div>
+
+            <div className="flex flex-col sm:col-span-2">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Address
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {employer.address}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Section: Employment Details */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-[#020617] border-b pb-2">
+            Employment Details
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Fuel Pump
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {employer.fuelPump}
+              </span>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Status
+              </span>
+              <div className="mt-1">
+                <Badge
+                  variant="outline"
+                  className={
+                    employer.status === "active"
+                      ? "bg-[#14b8a6]/10 text-[#14b8a6] border-[#14b8a6]/20"
+                      : "bg-red-100 text-red-600 border-red-200"
+                  }
+                >
+                  {employer.status === "active" ? "Active" : "Inactive"}
+                </Badge>
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Monthly Salary (PKR)
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {employer.salary}
+              </span>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Advance Salary (PKR)
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {employer.advanceSalary || "—"}
+              </span>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+                Joining Date
+              </span>
+              <span className="text-base text-[#020617] font-semibold">
+                {new Date(employer.joiningDate).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Section: Notes */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-[#020617] border-b pb-2">Notes</h2>
+          <div className="flex flex-col">
+            <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
+              Additional Notes
+            </span>
+            <span className="text-base text-[#64748b]">
+              {employer.notes || "No additional notes"}
+            </span>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default EmployerView;
