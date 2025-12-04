@@ -1,4 +1,6 @@
-import { useNavigate, useParams } from "react-router-dom";
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +12,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { ArrowLeft, Check, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface SaleProduct {
     name: string;
@@ -34,41 +37,22 @@ interface SaleDetails {
     notes: string;
 }
 
-const mockSale: SaleDetails = {
-    id: "SL001",
-    pumpName: "Fuel Pump A",
-    employerName: "Ali Hassan",
-    customerName: "Muhammad Usman",
-    paymentMethod: "Cash",
-    status: "pending",
-    createdAt: "2024-01-15 09:30 AM",
-    products: [
-        { name: "Petrol", quantity: 10, price: 280, lineTotal: 2800 },
-        { name: "Engine Oil (1L)", quantity: 1, price: 700, lineTotal: 700 },
-    ],
-    subtotal: 3500,
-    tax: 0,
-    grandTotal: 3500,
-    paidAmount: 3500,
-    notes: "Customer requested receipt copy via email.",
-};
-
-const SaleView = () => {
-    const navigate = useNavigate();
-    const { id } = useParams();
-
-    const sale = mockSale;
+const SaleView = ({ data }: { data: SaleDetails }) => {
+    const router = useRouter();
+    const [status, setStatus] = useState(data.status);
 
     const handleApprove = () => {
-        console.log("Approve sale:", id);
+        setStatus("approved");
+        toast.success("Sale approved successfully");
     };
 
     const handleReject = () => {
-        console.log("Reject sale:", id);
+        setStatus("rejected");
+        toast.error("Sale rejected");
     };
 
-    const getStatusBadge = (status: SaleDetails["status"]) => {
-        switch (status) {
+    const getStatusBadge = (currentStatus: SaleDetails["status"]) => {
+        switch (currentStatus) {
             case "pending":
                 return (
                     <span className="px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-700">
@@ -98,7 +82,7 @@ const SaleView = () => {
                     <div className="flex items-center gap-3">
                         <Button
                             variant="outline"
-                            onClick={() => navigate("/admin/sales")}
+                            onClick={() => router.push("/admin/sales")}
                             className="gap-2"
                         >
                             <ArrowLeft className="h-4 w-4" />
@@ -107,7 +91,7 @@ const SaleView = () => {
                         <h1 className="text-2xl font-bold text-[#020617]">Sale Details</h1>
                     </div>
                     <div className="flex items-center gap-3">
-                        {sale.status === "pending" ? (
+                        {status === "pending" ? (
                             <>
                                 <Button
                                     onClick={handleApprove}
@@ -125,7 +109,7 @@ const SaleView = () => {
                                 </Button>
                             </>
                         ) : (
-                            getStatusBadge(sale.status)
+                            getStatusBadge(status)
                         )}
                     </div>
                 </div>
@@ -142,14 +126,14 @@ const SaleView = () => {
                                 <p className="text-xs uppercase tracking-wide text-[#64748b] mb-1">
                                     Sale ID
                                 </p>
-                                <p className="text-base font-semibold text-[#020617]">{sale.id}</p>
+                                <p className="text-base font-semibold text-[#020617]">{data.id}</p>
                             </div>
                             <div>
                                 <p className="text-xs uppercase tracking-wide text-[#64748b] mb-1">
                                     Pump Name
                                 </p>
                                 <p className="text-base font-semibold text-[#020617]">
-                                    {sale.pumpName}
+                                    {data.pumpName}
                                 </p>
                             </div>
                             <div>
@@ -157,7 +141,7 @@ const SaleView = () => {
                                     Employer Name
                                 </p>
                                 <p className="text-base font-semibold text-[#020617]">
-                                    {sale.employerName}
+                                    {data.employerName}
                                 </p>
                             </div>
                             <div>
@@ -165,7 +149,7 @@ const SaleView = () => {
                                     Customer Name
                                 </p>
                                 <p className="text-base font-semibold text-[#020617]">
-                                    {sale.customerName || "—"}
+                                    {data.customerName || "—"}
                                 </p>
                             </div>
                             <div>
@@ -173,21 +157,21 @@ const SaleView = () => {
                                     Payment Method
                                 </p>
                                 <p className="text-base font-semibold text-[#020617]">
-                                    {sale.paymentMethod}
+                                    {data.paymentMethod}
                                 </p>
                             </div>
                             <div>
                                 <p className="text-xs uppercase tracking-wide text-[#64748b] mb-1">
                                     Status
                                 </p>
-                                <div className="mt-1">{getStatusBadge(sale.status)}</div>
+                                <div className="mt-1">{getStatusBadge(status)}</div>
                             </div>
                             <div>
                                 <p className="text-xs uppercase tracking-wide text-[#64748b] mb-1">
-                                    Created At
+                                    Sale Date & Time
                                 </p>
                                 <p className="text-base font-semibold text-[#020617]">
-                                    {sale.createdAt}
+                                    {data.createdAt}
                                 </p>
                             </div>
                         </div>
@@ -209,15 +193,15 @@ const SaleView = () => {
                                             Quantity
                                         </TableHead>
                                         <TableHead className="font-semibold text-[#020617] text-right">
-                                            Price (₨)
+                                            Price (Rs.)
                                         </TableHead>
                                         <TableHead className="font-semibold text-[#020617] text-right">
-                                            Line Total (₨)
+                                            Line Total (Rs.)
                                         </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {sale.products.map((product, index) => (
+                                    {data.products.map((product, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="text-[#020617] font-medium">
                                                 {product.name}
@@ -226,10 +210,10 @@ const SaleView = () => {
                                                 {product.quantity}
                                             </TableCell>
                                             <TableCell className="text-[#020617] text-right">
-                                                ₨ {product.price.toLocaleString()}
+                                                Rs. {product.price.toLocaleString()}
                                             </TableCell>
                                             <TableCell className="text-[#020617] font-semibold text-right">
-                                                ₨ {product.lineTotal.toLocaleString()}
+                                                Rs. {product.lineTotal.toLocaleString()}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -249,7 +233,7 @@ const SaleView = () => {
                                     Subtotal
                                 </p>
                                 <p className="text-base font-semibold text-[#020617]">
-                                    ₨ {sale.subtotal.toLocaleString()}
+                                    Rs. {data.subtotal.toLocaleString()}
                                 </p>
                             </div>
                             <div>
@@ -257,7 +241,7 @@ const SaleView = () => {
                                     Tax
                                 </p>
                                 <p className="text-base font-semibold text-[#020617]">
-                                    ₨ {sale.tax.toLocaleString()}
+                                    Rs. {data.tax.toLocaleString()}
                                 </p>
                             </div>
                             <div>
@@ -265,7 +249,7 @@ const SaleView = () => {
                                     Grand Total
                                 </p>
                                 <p className="text-xl font-bold text-[#14b8a6]">
-                                    ₨ {sale.grandTotal.toLocaleString()}
+                                    Rs. {data.grandTotal.toLocaleString()}
                                 </p>
                             </div>
                             <div>
@@ -273,7 +257,7 @@ const SaleView = () => {
                                     Paid Amount
                                 </p>
                                 <p className="text-base font-semibold text-[#020617]">
-                                    ₨ {sale.paidAmount.toLocaleString()}
+                                    Rs. {data.paidAmount.toLocaleString()}
                                 </p>
                             </div>
                         </div>
@@ -285,7 +269,7 @@ const SaleView = () => {
                             Sale Notes
                         </h2>
                         <p className="text-base text-[#020617]">
-                            {sale.notes || "—"}
+                            {data.notes || "—"}
                         </p>
                     </div>
                 </Card>

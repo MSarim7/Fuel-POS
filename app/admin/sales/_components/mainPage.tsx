@@ -20,6 +20,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Search, Eye, Check, X, DollarSign, Clock, CheckCircle } from "lucide-react";
+
 interface Sale {
     id: string;
     products: string;
@@ -31,7 +32,7 @@ interface Sale {
     createdAt: string;
 }
 
-const mockSales: Sale[] = [
+const initialSales: Sale[] = [
     {
         id: "SL001",
         products: "Petrol (10L), Engine Oil",
@@ -86,11 +87,12 @@ const mockSales: Sale[] = [
 
 const Sales = () => {
     const router = useRouter();
+    const [sales, setSales] = useState<Sale[]>(initialSales);
     const [searchQuery, setSearchQuery] = useState("");
     const [pumpFilter, setPumpFilter] = useState("all");
     const [statusFilter, setStatusFilter] = useState("all");
 
-    const filteredSales = mockSales.filter((sale) => {
+    const filteredSales = sales.filter((sale) => {
         const matchesSearch =
             sale.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
             sale.employer.toLowerCase().includes(searchQuery.toLowerCase());
@@ -99,9 +101,9 @@ const Sales = () => {
         return matchesSearch && matchesPump && matchesStatus;
     });
 
-    const totalSales = mockSales.length;
-    const approvedSales = mockSales.filter((s) => s.status === "approved").length;
-    const pendingSales = mockSales.filter((s) => s.status === "pending").length;
+    const totalSales = sales.length;
+    const approvedSales = sales.filter((s) => s.status === "approved").length;
+    const pendingSales = sales.filter((s) => s.status === "pending").length;
 
     const getStatusBadge = (status: Sale["status"]) => {
         switch (status) {
@@ -127,11 +129,19 @@ const Sales = () => {
     };
 
     const handleApprove = (id: string) => {
-        console.log("Approve sale:", id);
+        setSales(prevSales =>
+            prevSales.map(sale =>
+                sale.id === id ? { ...sale, status: "approved" } : sale
+            )
+        );
     };
 
     const handleReject = (id: string) => {
-        console.log("Reject sale:", id);
+        setSales(prevSales =>
+            prevSales.map(sale =>
+                sale.id === id ? { ...sale, status: "rejected" } : sale
+            )
+        );
     };
 
     return (
@@ -142,7 +152,7 @@ const Sales = () => {
                     <Card className="bg-white rounded-xl border shadow-sm">
                         <CardContent className="p-6 text-center">
                             <div className="flex justify-center mb-2">
-                                <DollarSign className="h-8 w-8 text-[#14b8a6]" />
+                                <DollarSign className="h-6 w-6 text-[#14b8a6]" />
                             </div>
                             <p className="text-sm text-[#64748b]">Total Sales</p>
                             <p className="text-2xl font-bold text-[#020617]">{totalSales}</p>
@@ -151,7 +161,7 @@ const Sales = () => {
                     <Card className="bg-white rounded-xl border shadow-sm">
                         <CardContent className="p-6 text-center">
                             <div className="flex justify-center mb-2">
-                                <CheckCircle className="h-8 w-8 text-[#22c55e]" />
+                                <CheckCircle className="h-6 w-6 text-[#22c55e]" />
                             </div>
                             <p className="text-sm text-[#64748b]">Approved Sales</p>
                             <p className="text-2xl font-bold text-[#020617]">{approvedSales}</p>
@@ -160,7 +170,7 @@ const Sales = () => {
                     <Card className="bg-white rounded-xl border shadow-sm">
                         <CardContent className="p-6 text-center">
                             <div className="flex justify-center mb-2">
-                                <Clock className="h-8 w-8 text-yellow-500" />
+                                <Clock className="h-6 w-6 text-yellow-500" />
                             </div>
                             <p className="text-sm text-[#64748b]">Pending Sales</p>
                             <p className="text-2xl font-bold text-[#020617]">{pendingSales}</p>
@@ -177,11 +187,11 @@ const Sales = () => {
                                 placeholder="Search by Sale ID or Employer"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 w-full sm:w-64 bg-white"
+                                className="pl-10 w-full sm:w-64 rounded-md"
                             />
                         </div>
                         <Select value={pumpFilter} onValueChange={setPumpFilter}>
-                            <SelectTrigger className="w-full sm:w-44 bg-white">
+                            <SelectTrigger className="w-full sm:w-44 rounded-md">
                                 <SelectValue placeholder="All Pumps" />
                             </SelectTrigger>
                             <SelectContent className="bg-white">
@@ -192,7 +202,7 @@ const Sales = () => {
                             </SelectContent>
                         </Select>
                         <Select value={statusFilter} onValueChange={setStatusFilter}>
-                            <SelectTrigger className="w-full sm:w-36 bg-white">
+                            <SelectTrigger className="w-full sm:w-36 rounded-md">
                                 <SelectValue placeholder="All Status" />
                             </SelectTrigger>
                             <SelectContent className="bg-white">
@@ -214,10 +224,10 @@ const Sales = () => {
                                 <TableHead className="font-semibold text-[#020617]">Products</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Pump</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Employer</TableHead>
-                                <TableHead className="font-semibold text-[#020617]">Amount (₨)</TableHead>
+                                <TableHead className="font-semibold text-[#020617]">Amount (Rs.)</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Payment</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Status</TableHead>
-                                <TableHead className="font-semibold text-[#020617]">Created At</TableHead>
+                                <TableHead className="font-semibold text-[#020617]">Sale Date & Time</TableHead>
                                 <TableHead className="font-semibold text-[#020617] text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -231,7 +241,7 @@ const Sales = () => {
                                     <TableCell className="text-[#020617]">{sale.pump}</TableCell>
                                     <TableCell className="text-[#020617]">{sale.employer}</TableCell>
                                     <TableCell className="text-[#020617] font-medium">
-                                        ₨ {sale.amount.toLocaleString()}
+                                        Rs. {sale.amount.toLocaleString()}
                                     </TableCell>
                                     <TableCell className="text-[#020617]">{sale.paymentMethod}</TableCell>
                                     <TableCell>{getStatusBadge(sale.status)}</TableCell>
@@ -259,7 +269,7 @@ const Sales = () => {
                                             <Button
                                                 size="sm"
                                                 variant="outline"
-                                                onClick={() => router.push(`/admin/sales/${sale.id}\view`)}
+                                                onClick={() => router.push(`/admin/sales/${sale.id}/view`)}
                                                 className="h-8 px-3"
                                             >
                                                 <Eye className="h-4 w-4" />
