@@ -24,7 +24,7 @@ const EmployerView = ({ data }: { data: EmployerData }) => {
   const employer = data;
 
   return (
-    <div className="p-6 bg-white min-h-screen">
+    <div className="p-6 bg-[#f1f5f9] min-h-screen">
       {/* Top Bar */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -137,7 +137,7 @@ const EmployerView = ({ data }: { data: EmployerData }) => {
 
             <div className="flex flex-col">
               <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
-                Monthly Salary (PKR)
+                Monthly Salary (Rs.)
               </span>
               <span className="text-base text-[#020617] font-semibold">
                 {employer.salary}
@@ -146,7 +146,7 @@ const EmployerView = ({ data }: { data: EmployerData }) => {
 
             <div className="flex flex-col">
               <span className="text-xs uppercase text-[#64748b] font-medium mb-1">
-                Advance Salary (PKR)
+                Advance Salary (Rs.)
               </span>
               <span className="text-base text-[#020617] font-semibold">
                 {employer.advanceSalary || "—"}

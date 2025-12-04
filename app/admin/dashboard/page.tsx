@@ -5,9 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { DollarSign, Fuel, Receipt, Activity, FileText, Package, TrendingUp } from "lucide-react";
 
 const recentTransactions = [
-  { id: "TXN-001", pump: "Pump 1", fuelType: "Diesel", amount: "₹2,450", time: "10:30 AM", status: "completed" },
-  { id: "TXN-002", pump: "Pump 3", fuelType: "Petrol", amount: "₹1,890", time: "10:25 AM", status: "completed" },
-  { id: "TXN-003", pump: "Pump 2", fuelType: "Diesel", amount: "₹3,200", time: "10:20 AM", status: "completed" },
+  { id: "TXN-001", pump: "Pump 1", fuelType: "Diesel", amount: "Rs.2,450", time: "10:30 AM", status: "completed" },
+  { id: "TXN-002", pump: "Pump 3", fuelType: "Petrol", amount: "Rs.1,890", time: "10:25 AM", status: "completed" },
+  { id: "TXN-003", pump: "Pump 2", fuelType: "Diesel", amount: "Rs.3,200", time: "10:20 AM", status: "completed" },
 ];
 
 export default function Dashboard() {
@@ -21,7 +21,7 @@ export default function Dashboard() {
             <CardTitle>Today&apos;s Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <span className="text-2xl font-bold">₹45,230</span>
+            <span className="text-2xl font-bold">Rs.45,230</span>
           </CardContent>
         </Card>
         <Card className="flex flex-col items-center justify-center p-4 rounded-xl border border-muted shadow-sm">

@@ -19,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Search, Plus } from "lucide-react";
 
 interface Expense {
   id: string;
@@ -127,14 +128,14 @@ const Expenses = () => {
 
   // Calculate summary metrics
   const totalExpenses = mockExpenses.length;
-  
+
   const today = new Date().toISOString().split("T")[0];
   const todayExpenses = mockExpenses.filter((exp) => exp.date === today).length;
-  
+
   const totalAmountSpent = mockExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
-    <div className="p-6 bg-white min-h-screen">
+    <div className="p-6 bg-[#f1f5f9] min-h-screen">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <Card className="p-6 bg-white shadow-sm border rounded-xl">
@@ -155,7 +156,7 @@ const Expenses = () => {
           <div className="text-center">
             <h3 className="text-sm text-[#64748b] mb-2">Total Amount Spent</h3>
             <p className="text-2xl font-bold text-[#020617]">
-              ₨ {totalAmountSpent.toLocaleString()}
+              Rs. {totalAmountSpent.toLocaleString()}
             </p>
           </div>
         </Card>
@@ -164,12 +165,15 @@ const Expenses = () => {
       {/* Search + Filters + Add Button */}
       <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
         <div className="flex items-center gap-3 flex-wrap">
-          <Input
-            placeholder="Search by expense name or ID"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-[250px] rounded-md"
-          />
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#64748b]" />
+            <Input
+              placeholder="Search expense by name or ID..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 rounded-md"
+            />
+          </div>
 
           <Select value={selectedType} onValueChange={setSelectedType}>
             <SelectTrigger className="w-[180px] rounded-md">
@@ -198,10 +202,9 @@ const Expenses = () => {
           </Select>
         </div>
 
-        <Link href="/admin/expenses/add">
-          <Button
-            className="bg-[#14b8a6] hover:bg-[#0d9488] text-white rounded-md px-4 py-2"
-          >
+        <Link href="/admin/expenses/add" className="w-full sm:w-auto">
+          <Button className="bg-[#14b8a6] hover:bg-[#0d9488] text-white rounded-md px-4 py-2 w-full sm:w-auto">
+            <Plus className="h-4 w-4 mr-2" />
             Add Expense
           </Button>
         </Link>
@@ -217,7 +220,7 @@ const Expenses = () => {
                 <TableHead className="text-xs text-[#64748b]">Name / Title</TableHead>
                 <TableHead className="text-xs text-[#64748b]">Type</TableHead>
                 <TableHead className="text-xs text-[#64748b]">Pump / Shop</TableHead>
-                <TableHead className="text-xs text-[#64748b]">Amount (₨)</TableHead>
+                <TableHead className="text-xs text-[#64748b]">Amount (Rs.)</TableHead>
                 <TableHead className="text-xs text-[#64748b]">Date</TableHead>
                 <TableHead className="text-xs text-[#64748b]">Notes</TableHead>
                 <TableHead className="text-xs text-[#64748b]">Action</TableHead>

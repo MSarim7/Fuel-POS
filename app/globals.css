@@ -4,30 +4,41 @@
 
 @layer base {
   :root {
-    --background: 210 20% 97%; /* #f1f5f9 Cool Gray */
-    --foreground: 222 47% 4%; /* #020617 Text color */
+    --background: 210 20% 97%;
+    /* #f1f5f9 Cool Gray */
+    --foreground: 222 47% 4%;
+    /* #020617 Text color */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 4%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 4%;
-    --primary: 174 64% 47%; /* #14b8a6 Teal */
-    --primary-hover: 174 71% 36%; /* #0d9488 Dark Teal */
+    --primary: 174 64% 47%;
+    /* #14b8a6 Teal */
+    --primary-hover: 174 71% 36%;
+    /* #0d9488 Dark Teal */
     --primary-foreground: 0 0% 100%;
-    --secondary: 186 94% 43%; /* #06b6d4 Cyan Accent */
+    --secondary: 186 94% 43%;
+    /* #06b6d4 Cyan Accent */
     --secondary-foreground: 0 0% 100%;
-    --muted: 215 20% 65%; /* #64748b Muted */
+    --muted: 215 20% 65%;
+    /* #64748b Muted */
     --muted-foreground: 215 20% 35%;
-    --accent: 186 94% 43%; /* #06b6d4 Cyan Accent */
+    --accent: 186 94% 43%;
+    /* #06b6d4 Cyan Accent */
     --accent-foreground: 0 0% 100%;
-    --success: 142 71% 50%; /* #22c55e Bright Green */
+    --success: 142 71% 50%;
+    /* #22c55e Bright Green */
     --success-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 210 16% 90%; /* #e2e8f0 for soft border */
-    --input: 210 20% 97%;
+    --border: 210 16% 90%;
+    /* #e2e8f0 for soft border */
+    --input: 214 32% 91%;
+    /* #cbd5e1 - visible border color */
     --ring: 174 64% 47%;
     --radius: 0.5rem;
-    --sidebar-background: 222 47% 7%; /* #0f172a Dark Slate */
+    --sidebar-background: 222 47% 7%;
+    /* #0f172a Dark Slate */
     --sidebar-foreground: 0 0% 100%;
     --sidebar-border: 215 20% 65%;
     --sidebar-accent: 174 64% 47%;
@@ -40,16 +51,20 @@
   }
 
   .dark {
-    --background: 222 47% 7%; /* #0f172a Dark Slate */
+    --background: 222 47% 7%;
+    /* #0f172a Dark Slate */
     --foreground: 0 0% 100%;
     --card: 222 47% 7%;
     --card-foreground: 0 0% 100%;
     --popover: 222 47% 7%;
     --popover-foreground: 0 0% 100%;
-    --primary: 174 64% 47%; /* #14b8a6 Teal */
-    --primary-hover: 174 71% 36%; /* #0d9488 Dark Teal */
+    --primary: 174 64% 47%;
+    /* #14b8a6 Teal */
+    --primary-hover: 174 71% 36%;
+    /* #0d9488 Dark Teal */
     --primary-foreground: 0 0% 100%;
-    --secondary: 186 94% 43%; /* #06b6d4 Cyan Accent */
+    --secondary: 186 94% 43%;
+    /* #06b6d4 Cyan Accent */
     --secondary-foreground: 0 0% 100%;
     --muted: 215 20% 65%;
     --muted-foreground: 215 20% 35%;
@@ -59,8 +74,10 @@
     --success-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
-    --border: 210 16% 90%; /* #e2e8f0 for soft border in dark too */
-    --input: 222 47% 7%;
+    --border: 210 16% 90%;
+    /* #e2e8f0 for soft border in dark too */
+    --input: 217 19% 35%;
+    /* #475569 - visible border color for dark mode */
     --ring: 174 64% 47%;
     --sidebar-background: 222 47% 7%;
     --sidebar-foreground: 0 0% 100%;
@@ -79,6 +96,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }

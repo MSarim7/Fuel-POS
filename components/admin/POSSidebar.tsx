@@ -13,10 +13,10 @@ const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
   { icon: Package, label: "Stock", href: "/admin/stock" },
   { icon: User, label: "Employers", href: "/admin/employers" },
+  { icon: User, label: "Fuel Pumps", href: "/admin/FuelPumps" },
   { icon: BarChart3, label: "Sales", href: "/admin/sales" },
   { icon: Receipt, label: "Expenses", href: "/admin/expenses" },
   { icon: FileText, label: "Reports", href: "/admin/report" },
-  { icon: Settings, label: "Settings", href: "/admin/settings" },
 ];
 
 export const AdminSidebar = () => {

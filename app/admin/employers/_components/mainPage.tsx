@@ -104,13 +104,8 @@ const Employers = () => {
   });
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f1f5f9]">
       <div className="container mx-auto p-6">
-        {/* Page Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-[#020617]">Employer Management</h1>
-          <p className="text-[#64748b] mt-1">Manage your petrol pump employees</p>
-        </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -205,7 +200,7 @@ const Employers = () => {
                   <TableHead className="text-xs text-[#64748b] font-semibold">Name</TableHead>
                   <TableHead className="text-xs text-[#64748b] font-semibold">Email</TableHead>
                   <TableHead className="text-xs text-[#64748b] font-semibold">Phone Number</TableHead>
-                  <TableHead className="text-xs text-[#64748b] font-semibold">Salary (PKR)</TableHead>
+                  <TableHead className="text-xs text-[#64748b] font-semibold">Salary (Rs.)</TableHead>
                   <TableHead className="text-xs text-[#64748b] font-semibold">Fuel Pump</TableHead>
                   <TableHead className="text-xs text-[#64748b] font-semibold">Status</TableHead>
                   <TableHead className="text-xs text-[#64748b] font-semibold text-right">Action</TableHead>

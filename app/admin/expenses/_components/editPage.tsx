@@ -63,7 +63,7 @@ const ExpenseEdit = ({ data }: { data: ExpenseData }) => {
   };
 
   return (
-    <div className="p-6 bg-white min-h-screen">
+    <div className="p-6 bg-[#f1f5f9] min-h-screen">
       {/* Top Bar */}
       <div className="flex items-center gap-3 mb-6">
         <Button
@@ -129,7 +129,7 @@ const ExpenseEdit = ({ data }: { data: ExpenseData }) => {
 
             <div className="space-y-2">
               <Label htmlFor="amount" className="text-sm font-medium text-[#020617]">
-                Amount (₨) <span className="text-red-500">*</span>
+                Amount (Rs.) <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="amount"

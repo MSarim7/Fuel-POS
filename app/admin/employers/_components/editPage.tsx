@@ -17,7 +17,6 @@ import {
 import { toast } from "sonner";
 
 type EmployerData = {
-  employerId: string;
   fullName: string;
   email: string;
   mobile: string;
@@ -52,7 +51,7 @@ const EmployerEdit = ({ data }: { data: EmployerData }) => {
   };
 
   return (
-    <div className="p-6 bg-white min-h-screen">
+    <div className="p-6 bg-[#f1f5f9] min-h-screen">
       {/* Top Section */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -146,18 +145,6 @@ const EmployerEdit = ({ data }: { data: EmployerData }) => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="employerId" className="text-sm font-medium text-[#020617]">
-                Employer ID
-              </Label>
-              <Input
-                id="employerId"
-                value={formData.employerId}
-                disabled
-                className="rounded-md bg-gray-50"
-              />
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="status" className="text-sm font-medium text-[#020617]">
                 Status <span className="text-red-500">*</span>
               </Label>
@@ -196,7 +183,7 @@ const EmployerEdit = ({ data }: { data: EmployerData }) => {
 
             <div className="space-y-2">
               <Label htmlFor="salary" className="text-sm font-medium text-[#020617]">
-                Monthly Salary (PKR) <span className="text-red-500">*</span>
+                Monthly Salary (Rs.) <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="salary"
@@ -210,7 +197,7 @@ const EmployerEdit = ({ data }: { data: EmployerData }) => {
 
             <div className="space-y-2">
               <Label htmlFor="advanceSalary" className="text-sm font-medium text-[#020617]">
-                Advance Salary (PKR)
+                Advance Salary (Rs.)
               </Label>
               <Input
                 id="advanceSalary"

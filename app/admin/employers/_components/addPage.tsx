@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,7 +19,6 @@ const AddEmployer = () => {
     email: "",
     mobile: "",
     address: "",
-    employerId: "",
     status: "",
     fuelPump: "",
     monthlySalary: "",
@@ -39,8 +38,8 @@ const AddEmployer = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.fullName || !formData.email || !formData.mobile || !formData.employerId) {
+
+    if (!formData.fullName || !formData.email || !formData.mobile) {
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields.",
@@ -57,7 +56,7 @@ const AddEmployer = () => {
   };
 
   return (
-    <div className="p-6 bg-white min-h-screen">
+    <div className="p-6 bg-[#f1f5f9] min-h-screen">
       {/* Top Bar - Back Button + Title */}
       <div className="flex items-center gap-3 mb-6">
         <Button
@@ -141,18 +140,6 @@ const AddEmployer = () => {
               Employment Details
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="employerId">Employer ID *</Label>
-                <Input
-                  id="employerId"
-                  name="employerId"
-                  value={formData.employerId}
-                  onChange={handleInputChange}
-                  placeholder="e.g., EMP001"
-                  className="rounded-md"
-                  required
-                />
-              </div>
 
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="status">Status *</Label>
@@ -188,7 +175,7 @@ const AddEmployer = () => {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="monthlySalary">Monthly Salary (₨) *</Label>
+                <Label htmlFor="monthlySalary">Monthly Salary (Rs.) *</Label>
                 <Input
                   id="monthlySalary"
                   name="monthlySalary"
@@ -202,7 +189,7 @@ const AddEmployer = () => {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="advanceSalary">Advance Salary (₨)</Label>
+                <Label htmlFor="advanceSalary">Advance Salary (Rs.)</Label>
                 <Input
                   id="advanceSalary"
                   name="advanceSalary"
