@@ -64,7 +64,7 @@ const FuelPumps = () => {
                     <Card className="bg-white border rounded-xl shadow-sm">
                         <CardContent className="p-6 text-center">
                             <div className="flex justify-center mb-2">
-                                <Fuel className="h-8 w-8 text-[#14b8a6]" />
+                                <Fuel className="h-6 w-6 text-[#14b8a6]" />
                             </div>
                             <p className="text-sm text-[#64748b]">Total Fuel Pumps</p>
                             <p className="text-2xl font-bold text-[#020617]">{totalPumps}</p>
@@ -73,7 +73,7 @@ const FuelPumps = () => {
                     <Card className="bg-white border rounded-xl shadow-sm">
                         <CardContent className="p-6 text-center">
                             <div className="flex justify-center mb-2">
-                                <CheckCircle className="h-8 w-8 text-[#22c55e]" />
+                                <CheckCircle className="h-6 w-6 text-[#22c55e]" />
                             </div>
                             <p className="text-sm text-[#64748b]">Active Pumps</p>
                             <p className="text-2xl font-bold text-[#020617]">{activePumps}</p>
@@ -82,7 +82,7 @@ const FuelPumps = () => {
                     <Card className="bg-white border rounded-xl shadow-sm">
                         <CardContent className="p-6 text-center">
                             <div className="flex justify-center mb-2">
-                                <XCircle className="h-8 w-8 text-red-500" />
+                                <XCircle className="h-6 w-6 text-red-500" />
                             </div>
                             <p className="text-sm text-[#64748b]">Inactive Pumps</p>
                             <p className="text-2xl font-bold text-[#020617]">{inactivePumps}</p>
@@ -99,16 +99,18 @@ const FuelPumps = () => {
                                 placeholder="Search fuel pump by name or ID"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 bg-white border rounded-md"
+                                className="pl-10 rounded-md"
                             />
                         </div>
                         <Select value={statusFilter} onValueChange={setStatusFilter}>
-                            <SelectTrigger className="w-full sm:w-40 bg-white border rounded-md">
+                            <SelectTrigger className="w-full sm:w-40 rounded-md">
                                 <SelectValue placeholder="Pump Status" />
                             </SelectTrigger>
                             <SelectContent className="bg-white border rounded-md shadow-lg z-50">
                                 <SelectItem value="all">All</SelectItem>
-                                <SelectItem value="active">Active</SelectItem>
+                                <SelectItem value="active">Active</
+
+                                SelectItem>
                                 <SelectItem value="inactive">Inactive</SelectItem>
                             </SelectContent>
                         </Select>

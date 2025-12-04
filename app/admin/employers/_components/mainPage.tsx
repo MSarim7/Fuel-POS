@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, Users, UserCheck, UserX } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -109,39 +109,33 @@ const Employers = () => {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <Card className="rounded-xl border shadow-sm bg-white">
-            <CardHeader className="pb-2 text-center">
-              <CardTitle className="text-sm font-medium text-[#64748b]">
-                Total Employers
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
+          <Card className="bg-white border shadow-sm rounded-xl">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-2">
+                <Users className="h-6 w-6 text-[#14b8a6]" />
+              </div>
+              <p className="text-sm text-[#64748b]">Total Employers</p>
               <p className="text-2xl font-bold text-[#020617]">{totalEmployers}</p>
-              <p className="text-xs text-[#64748b] mt-1">All registered employees</p>
             </CardContent>
           </Card>
 
-          <Card className="rounded-xl border shadow-sm bg-white">
-            <CardHeader className="pb-2 text-center">
-              <CardTitle className="text-sm font-medium text-[#64748b]">
-                Active Employers
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-2xl font-bold text-[#14b8a6]">{activeEmployers}</p>
-              <p className="text-xs text-[#64748b] mt-1">Currently working</p>
+          <Card className="bg-white border shadow-sm rounded-xl">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-2">
+                <UserCheck className="h-6 w-6 text-[#22c55e]" />
+              </div>
+              <p className="text-sm text-[#64748b]">Active Employers</p>
+              <p className="text-2xl font-bold text-[#020617]">{activeEmployers}</p>
             </CardContent>
           </Card>
 
-          <Card className="rounded-xl border shadow-sm bg-white">
-            <CardHeader className="pb-2 text-center">
-              <CardTitle className="text-sm font-medium text-[#64748b]">
-                Inactive Employers
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-2xl font-bold text-red-600">{inactiveEmployers}</p>
-              <p className="text-xs text-[#64748b] mt-1">Not currently working</p>
+          <Card className="bg-white border shadow-sm rounded-xl">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-2">
+                <UserX className="h-6 w-6 text-red-500" />
+              </div>
+              <p className="text-sm text-[#64748b]">Inactive Employers</p>
+              <p className="text-2xl font-bold text-[#020617]">{inactiveEmployers}</p>
             </CardContent>
           </Card>
         </div>

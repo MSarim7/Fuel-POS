@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, Receipt, TrendingUp, DollarSign } from "lucide-react";
 
 interface Expense {
   id: string;
@@ -138,27 +138,36 @@ const Expenses = () => {
     <div className="p-6 bg-[#f1f5f9] min-h-screen">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <Card className="p-6 bg-white shadow-sm border rounded-xl">
-          <div className="text-center">
-            <h3 className="text-sm text-[#64748b] mb-2">Total Expenses</h3>
+        <Card className="bg-white border shadow-sm rounded-xl">
+          <CardContent className="p-6 text-center">
+            <div className="flex justify-center mb-2">
+              <Receipt className="h-6 w-6 text-[#14b8a6]" />
+            </div>
+            <p className="text-sm text-[#64748b]">Total Expenses</p>
             <p className="text-2xl font-bold text-[#020617]">{totalExpenses}</p>
-          </div>
+          </CardContent>
         </Card>
 
-        <Card className="p-6 bg-white shadow-sm border rounded-xl">
-          <div className="text-center">
-            <h3 className="text-sm text-[#64748b] mb-2">Today&apos;s Expenses</h3>
-            <p className="text-2xl font-bold text-[#14b8a6]">{todayExpenses}</p>
-          </div>
+        <Card className="bg-white border shadow-sm rounded-xl">
+          <CardContent className="p-6 text-center">
+            <div className="flex justify-center mb-2">
+              <TrendingUp className="h-6 w-6 text-[#06b6d4]" />
+            </div>
+            <p className="text-sm text-[#64748b]">Today's Expenses</p>
+            <p className="text-2xl font-bold text-[#020617]">{todayExpenses}</p>
+          </CardContent>
         </Card>
 
-        <Card className="p-6 bg-white shadow-sm border rounded-xl">
-          <div className="text-center">
-            <h3 className="text-sm text-[#64748b] mb-2">Total Amount Spent</h3>
+        <Card className="bg-white border shadow-sm rounded-xl">
+          <CardContent className="p-6 text-center">
+            <div className="flex justify-center mb-2">
+              <DollarSign className="h-6 w-6 text-[#22c55e]" />
+            </div>
+            <p className="text-sm text-[#64748b]">Total Amount Spent</p>
             <p className="text-2xl font-bold text-[#020617]">
               Rs. {totalAmountSpent.toLocaleString()}
             </p>
-          </div>
+          </CardContent>
         </Card>
       </div>
 
