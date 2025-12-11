@@ -1,16 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { LogOut, User, ChevronDown } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
     AlertDialog,
     AlertDialogAction,

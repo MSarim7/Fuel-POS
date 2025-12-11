@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+
 
 // Import report components
 import { OverviewReport } from "./OverviewReport";
@@ -17,6 +16,7 @@ import { EmployerReport } from "./EmployerReport";
 import { PumpsReport } from "./PumpsReport";
 import { ExpenseReport } from "./ExpenseReport";
 import { StocksReport } from "./StocksReport";
+import { ReportData } from "./types";
 
 // Dummy data generators
 const generateDummyData = () => {
@@ -92,22 +92,22 @@ export default function ReportsMainPage() {
     const [selectedPump, setSelectedPump] = useState<string>("all");
     const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
     const [toDate, setToDate] = useState<Date | undefined>(undefined);
-    const [rawData, setRawData] = useState<any>({ sales: [], employers: [], pumps: [], expenses: [], stocks: [] });
-    const [isLoading, setIsLoading] = useState(true);
+    const [rawData, setRawData] = useState<ReportData>({ sales: [], employers: [], pumps: [], expenses: [], stocks: [] });
+    // const [isLoading, setIsLoading] = useState(true);
 
     // Generate dummy data only on client side to prevent hydration errors
     useEffect(() => {
         setRawData(generateDummyData());
-        setIsLoading(false);
+        // setIsLoading(false);
     }, []);
 
     const pumps = ["Pump 1", "Pump 2", "Pump 3", "Pump 4"];
 
     // Filter data based on selected pump and date range
     const getFilteredData = () => {
-        const filterByPumpAndDate = (items: any[]) => {
+        const filterByPumpAndDate = <T extends { date?: string; dateJoined?: string; lastMaintenance?: string; lastUpdated?: string; pumpId?: string; pump?: string; location?: string }>(items: T[]) => {
             return items.filter((item) => {
-                const itemDate = new Date(item.date || item.dateJoined || item.lastMaintenance || item.lastUpdated);
+                const itemDate = new Date(item.date || item.dateJoined || item.lastMaintenance || item.lastUpdated || "");
                 const matchesPump = selectedPump === "all" || item.pumpId === selectedPump || item.pump === selectedPump || item.location === selectedPump;
                 const matchesDate = !fromDate || !toDate || (itemDate >= fromDate && itemDate <= toDate);
                 return matchesPump && matchesDate;

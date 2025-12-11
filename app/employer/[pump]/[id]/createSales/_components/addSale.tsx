@@ -124,12 +124,7 @@ export default function CreateSale() {
         });
     };
 
-    const convertToLiters = (quantity: number, unit: "L" | "mL" | "pcs"): number => {
-        if (unit === "mL") {
-            return quantity / 1000;
-        }
-        return quantity;
-    };
+
 
     const formatQuantityDisplay = (quantity: number, unit: "L" | "mL" | "pcs"): string => {
         if (unit === "L") {

@@ -10,36 +10,38 @@ import { format } from "date-fns";
 
 const COLORS = ['#14b8a6', '#06b6d4', '#0d9488', '#22d3ee'];
 
+import { StockItem } from "./types";
+
 interface StocksReportProps {
-    stocksData: any[];
+  stocksData: StockItem[];
 }
 
 export function StocksReport({ stocksData }: StocksReportProps) {
-    // Calculate metrics
-    const totalStockItems = stocksData.length;
-    const lowStockItems = stocksData.filter((item) => item.quantity < 2000).length;
-    const totalStockValue = stocksData.reduce((sum, item) => sum + (item.quantity * item.price), 0);
-    const averageStockPrice = totalStockItems > 0 ? Math.round(totalStockValue / totalStockItems) : 0;
+  // Calculate metrics
+  const totalStockItems = stocksData.length;
+  const lowStockItems = stocksData.filter((item) => item.quantity < 2000).length;
+  const totalStockValue = stocksData.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+  const averageStockPrice = totalStockItems > 0 ? Math.round(totalStockValue / totalStockItems) : 0;
 
-    // Prepare chart data
-    const stockByFuelType = stocksData.map((stock) => ({
-        name: stock.fuelType,
-        quantity: stock.quantity,
-    }));
+  // Prepare chart data
+  const stockByFuelType = stocksData.map((stock) => ({
+    name: stock.fuelType,
+    quantity: stock.quantity,
+  }));
 
-    const stockDistribution = stocksData.map((stock) => ({
-        name: stock.location,
-        value: stock.quantity,
-    }));
+  const stockDistribution = stocksData.map((stock) => ({
+    name: stock.location,
+    value: stock.quantity,
+  }));
 
-    const generateStocksPDF = () => {
-        const formatCurrency = (amount: number) => {
-            return `Rs. ${amount.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-        };
+  const generateStocksPDF = () => {
+    const formatCurrency = (amount: number) => {
+      return `Rs. ${amount.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    };
 
-        const formatNumber = (num: number) => num.toLocaleString('en-PK');
+    const formatNumber = (num: number) => num.toLocaleString('en-PK');
 
-        const htmlContent = `
+    const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -147,10 +149,10 @@ export function StocksReport({ stocksData }: StocksReportProps) {
         <div class="header">
           <div class="title">⛽ Fuel POS Stocks Report</div>
           <div class="subtitle">Generated on ${new Date().toLocaleDateString('en-PK', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}</div>
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</div>
         </div>
 
         <div class="section">
@@ -208,153 +210,153 @@ export function StocksReport({ stocksData }: StocksReportProps) {
       </html>
     `;
 
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-    };
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
+  };
 
-    return (
-        <div className="space-y-4">
-            {/* Metric Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Stock Items</CardTitle>
-                        <Package className="h-4 w-4 text-primary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-primary">{totalStockItems}</div>
-                        <p className="text-xs text-muted-foreground">Fuel types</p>
-                    </CardContent>
-                </Card>
+  return (
+    <div className="space-y-4">
+      {/* Metric Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Stock Items</CardTitle>
+            <Package className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">{totalStockItems}</div>
+            <p className="text-xs text-muted-foreground">Fuel types</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
-                        <AlertCircle className="h-4 w-4 text-yellow-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-yellow-600">{lowStockItems}</div>
-                        <p className="text-xs text-muted-foreground">Below 2000L</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
+            <AlertCircle className="h-4 w-4 text-yellow-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-yellow-600">{lowStockItems}</div>
+            <p className="text-xs text-muted-foreground">Below 2000L</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Stock Value</CardTitle>
-                        <DollarSign className="h-4 w-4 text-success" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-success">₨ {totalStockValue.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">Inventory value</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Stock Value</CardTitle>
+            <DollarSign className="h-4 w-4 text-success" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-success">₨ {totalStockValue.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Inventory value</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Avg Stock Price</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-secondary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-secondary">₨ {averageStockPrice.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">Per item</p>
-                    </CardContent>
-                </Card>
-            </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Stock Price</CardTitle>
+            <TrendingUp className="h-4 w-4 text-secondary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-secondary">₨ {averageStockPrice.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Per item</p>
+          </CardContent>
+        </Card>
+      </div>
 
-            {/* Charts */}
-            <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Stock Quantity by Fuel Type</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={stockByFuelType}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="quantity" fill="#14b8a6" name="Quantity (L)" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+      {/* Charts */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Stock Quantity by Fuel Type</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={stockByFuelType}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="quantity" fill="#14b8a6" name="Quantity (L)" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Stock Distribution by Location</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={stockDistribution}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={80}
-                                    label
-                                >
-                                    {stockDistribution.map((_: any, index: number) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Stock Distribution by Location</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={stockDistribution}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  {stockDistribution.map((_: { name: string; value: number }, index: number) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
 
-            {/* Stock Table */}
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Stock Details</CardTitle>
-                    <Button variant="outline" size="sm" onClick={generateStocksPDF}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                    </Button>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Fuel Type</TableHead>
-                                <TableHead>Quantity</TableHead>
-                                <TableHead>Price</TableHead>
-                                <TableHead>Location</TableHead>
-                                <TableHead>Last Updated</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {stocksData.map((stock: any, index: number) => (
-                                <TableRow key={index}>
-                                    <TableCell className="font-medium">{stock.fuelType}</TableCell>
-                                    <TableCell>
-                                        <Badge variant={stock.quantity >= 2000 ? "default" : "secondary"}>
-                                            {stock.quantity.toLocaleString()} L
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>₨ {stock.price.toLocaleString()}/L</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{stock.location}</Badge>
-                                    </TableCell>
-                                    <TableCell>{format(new Date(stock.lastUpdated), "MMM dd, yyyy")}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-        </div>
-    );
+      {/* Stock Table */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Stock Details</CardTitle>
+          <Button variant="outline" size="sm" onClick={generateStocksPDF}>
+            <Download className="mr-2 h-4 w-4" />
+            Download PDF
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Fuel Type</TableHead>
+                <TableHead>Quantity</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead>Last Updated</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {stocksData.map((stock: StockItem, index: number) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{stock.fuelType}</TableCell>
+                  <TableCell>
+                    <Badge variant={stock.quantity >= 2000 ? "default" : "secondary"}>
+                      {stock.quantity.toLocaleString()} L
+                    </Badge>
+                  </TableCell>
+                  <TableCell>₨ {stock.price.toLocaleString()}/L</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{stock.location}</Badge>
+                  </TableCell>
+                  <TableCell>{format(new Date(stock.lastUpdated), "MMM dd, yyyy")}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

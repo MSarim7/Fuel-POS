@@ -6,54 +6,56 @@ import { DollarSign, ShoppingCart, TrendingUp, TrendingDown, Package, Users, Fue
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
 
+import { SalesItem } from "./types";
+
 interface OverviewReportProps {
-    metrics: {
-        totalRevenue: number;
-        totalOrders: number;
-        totalProfit: number;
-        totalExpenses: number;
-        totalPumps: number;
-        fuelStock: number;
-        totalEmployers: number;
-        activePumps: number;
-    };
-    salesData: any[];
+  metrics: {
+    totalRevenue: number;
+    totalOrders: number;
+    totalProfit: number;
+    totalExpenses: number;
+    totalPumps: number;
+    fuelStock: number;
+    totalEmployers: number;
+    activePumps: number;
+  };
+  salesData: SalesItem[];
 }
 
 export function OverviewReport({ metrics, salesData }: OverviewReportProps) {
-    // Prepare chart data
-    const prepareChartData = () => {
-        const groupedByDate: Record<string, { revenue: number; expenses: number }> = {};
+  // Prepare chart data
+  const prepareChartData = () => {
+    const groupedByDate: Record<string, { revenue: number; expenses: number }> = {};
 
-        salesData.forEach((sale) => {
-            const date = format(new Date(sale.date), "MMM dd");
-            if (!groupedByDate[date]) {
-                groupedByDate[date] = { revenue: 0, expenses: 0 };
-            }
-            groupedByDate[date].revenue += sale.totalPrice;
-            groupedByDate[date].expenses += Math.floor(sale.totalPrice * 0.6); // Mock expense calculation
-        });
+    salesData.forEach((sale) => {
+      const date = format(new Date(sale.date), "MMM dd");
+      if (!groupedByDate[date]) {
+        groupedByDate[date] = { revenue: 0, expenses: 0 };
+      }
+      groupedByDate[date].revenue += sale.totalPrice;
+      groupedByDate[date].expenses += Math.floor(sale.totalPrice * 0.6); // Mock expense calculation
+    });
 
-        return Object.entries(groupedByDate).map(([month, data]) => ({
-            month,
-            revenue: data.revenue,
-            expenses: data.expenses,
-        }));
+    return Object.entries(groupedByDate).map(([month, data]) => ({
+      month,
+      revenue: data.revenue,
+      expenses: data.expenses,
+    }));
+  };
+
+  const revenueVsExpenses = prepareChartData();
+
+  const salesTrend = salesData.slice(0, 10).map((sale) => ({
+    date: format(new Date(sale.date), "MMM dd"),
+    sales: sale.totalPrice,
+  }));
+
+  const generateOverviewPDF = () => {
+    const formatCurrency = (amount: number) => {
+      return `Rs. ${amount.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
     };
 
-    const revenueVsExpenses = prepareChartData();
-
-    const salesTrend = salesData.slice(0, 10).map((sale) => ({
-        date: format(new Date(sale.date), "MMM dd"),
-        sales: sale.totalPrice,
-    }));
-
-    const generateOverviewPDF = () => {
-        const formatCurrency = (amount: number) => {
-            return `Rs. ${amount.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-        };
-
-        const htmlContent = `
+    const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -155,10 +157,10 @@ export function OverviewReport({ metrics, salesData }: OverviewReportProps) {
         <div class="header">
           <div class="title">⛽ Fuel POS Overview Report</div>
           <div class="subtitle">Generated on ${new Date().toLocaleDateString('en-PK', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}</div>
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</div>
         </div>
 
         <div class="section">
@@ -226,182 +228,182 @@ export function OverviewReport({ metrics, salesData }: OverviewReportProps) {
       </html>
     `;
 
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-    };
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
+  };
 
-    return (
-        <div className="space-y-4">
-            {/* Main Metric Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                        <DollarSign className="h-4 w-4 text-primary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-primary">₨ {metrics.totalRevenue.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">From all sales</p>
-                    </CardContent>
-                </Card>
+  return (
+    <div className="space-y-4">
+      {/* Main Metric Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">₨ {metrics.totalRevenue.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">From all sales</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-                        <ShoppingCart className="h-4 w-4 text-secondary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-secondary">{metrics.totalOrders.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">Completed orders</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-secondary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-secondary">{metrics.totalOrders.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Completed orders</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Profit</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-success" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className={`text-2xl font-bold ${metrics.totalProfit >= 0 ? 'text-success' : 'text-red-600'}`}>
-                            ₨ {metrics.totalProfit.toLocaleString()}
-                        </div>
-                        <p className="text-xs text-muted-foreground">Revenue - Expenses</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-                        <TrendingDown className="h-4 w-4 text-red-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-red-600">₨ {metrics.totalExpenses.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">Operating costs</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Profit</CardTitle>
+            <TrendingUp className="h-4 w-4 text-success" />
+          </CardHeader>
+          <CardContent>
+            <div className={`text-2xl font-bold ${metrics.totalProfit >= 0 ? 'text-success' : 'text-red-600'}`}>
+              ₨ {metrics.totalProfit.toLocaleString()}
             </div>
+            <p className="text-xs text-muted-foreground">Revenue - Expenses</p>
+          </CardContent>
+        </Card>
 
-            {/* Secondary Metrics */}
-            <div className="grid gap-4 md:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Pumps</CardTitle>
-                        <Fuel className="h-4 w-4 text-primary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-primary">{metrics.totalPumps}</div>
-                        <p className="text-xs text-muted-foreground">All pumps</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+            <TrendingDown className="h-4 w-4 text-red-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">₨ {metrics.totalExpenses.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Operating costs</p>
+          </CardContent>
+        </Card>
+      </div>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active Pumps</CardTitle>
-                        <Fuel className="h-4 w-4 text-success" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-success">{metrics.activePumps}</div>
-                        <p className="text-xs text-muted-foreground">Currently active</p>
-                    </CardContent>
-                </Card>
+      {/* Secondary Metrics */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Pumps</CardTitle>
+            <Fuel className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">{metrics.totalPumps}</div>
+            <p className="text-xs text-muted-foreground">All pumps</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Fuel Stock</CardTitle>
-                        <Package className="h-4 w-4 text-secondary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-secondary">{metrics.fuelStock.toLocaleString()} L</div>
-                        <p className="text-xs text-muted-foreground">In inventory</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Pumps</CardTitle>
+            <Fuel className="h-4 w-4 text-success" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-success">{metrics.activePumps}</div>
+            <p className="text-xs text-muted-foreground">Currently active</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Employees</CardTitle>
-                        <Users className="h-4 w-4 text-primary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-primary">{metrics.totalEmployers}</div>
-                        <p className="text-xs text-muted-foreground">Active staff</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Fuel Stock</CardTitle>
+            <Package className="h-4 w-4 text-secondary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-secondary">{metrics.fuelStock.toLocaleString()} L</div>
+            <p className="text-xs text-muted-foreground">In inventory</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Employees</CardTitle>
+            <Users className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">{metrics.totalEmployers}</div>
+            <p className="text-xs text-muted-foreground">Active staff</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Revenue vs Expenses</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={revenueVsExpenses}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="revenue" fill="#14b8a6" name="Revenue" />
+                <Bar dataKey="expenses" fill="#dc2626" name="Expenses" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Sales Trend</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={salesTrend}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="sales" stroke="#14b8a6" strokeWidth={2} name="Sales" />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Financial Summary */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Financial Summary</CardTitle>
+          <Button variant="outline" size="sm" onClick={generateOverviewPDF}>
+            <Download className="mr-2 h-4 w-4" />
+            Download PDF
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center border-b pb-2">
+              <span className="font-medium">Total Revenue</span>
+              <span className="text-primary font-bold">₨ {metrics.totalRevenue.toLocaleString()}</span>
             </div>
-
-            {/* Charts */}
-            <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Revenue vs Expenses</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={revenueVsExpenses}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="month" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="revenue" fill="#14b8a6" name="Revenue" />
-                                <Bar dataKey="expenses" fill="#dc2626" name="Expenses" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Sales Trend</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={salesTrend}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line type="monotone" dataKey="sales" stroke="#14b8a6" strokeWidth={2} name="Sales" />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+            <div className="flex justify-between items-center border-b pb-2">
+              <span className="font-medium">Total Expenses</span>
+              <span className="text-red-600 font-bold">₨ {metrics.totalExpenses.toLocaleString()}</span>
             </div>
-
-            {/* Financial Summary */}
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Financial Summary</CardTitle>
-                    <Button variant="outline" size="sm" onClick={generateOverviewPDF}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                    </Button>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                        <div className="flex justify-between items-center border-b pb-2">
-                            <span className="font-medium">Total Revenue</span>
-                            <span className="text-primary font-bold">₨ {metrics.totalRevenue.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between items-center border-b pb-2">
-                            <span className="font-medium">Total Expenses</span>
-                            <span className="text-red-600 font-bold">₨ {metrics.totalExpenses.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between items-center pt-2 bg-primary/10 p-3 rounded-lg">
-                            <span className="font-bold text-lg">Net Profit</span>
-                            <span className={`font-bold text-lg ${metrics.totalProfit >= 0 ? 'text-success' : 'text-red-600'}`}>
-                                ₨ {metrics.totalProfit.toLocaleString()}
-                            </span>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-    );
+            <div className="flex justify-between items-center pt-2 bg-primary/10 p-3 rounded-lg">
+              <span className="font-bold text-lg">Net Profit</span>
+              <span className={`font-bold text-lg ${metrics.totalProfit >= 0 ? 'text-success' : 'text-red-600'}`}>
+                ₨ {metrics.totalProfit.toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

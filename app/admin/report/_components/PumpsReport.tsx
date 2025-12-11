@@ -10,32 +10,34 @@ import { format } from "date-fns";
 
 const COLORS = ['#14b8a6', '#06b6d4', '#0d9488', '#22d3ee'];
 
+import { PumpItem } from "./types";
+
 interface PumpsReportProps {
-    pumpsData: any[];
+  pumpsData: PumpItem[];
 }
 
 export function PumpsReport({ pumpsData }: PumpsReportProps) {
-    // Calculate metrics
-    const totalPumps = pumpsData.length;
-    const activePumps = pumpsData.filter((p) => p.status === "Active").length;
-    const maintenanceRequired = pumpsData.filter((p) => p.status === "Maintenance").length;
-    const totalFuelDispensed = pumpsData.reduce((sum, pump) => sum + pump.totalDispensed, 0);
+  // Calculate metrics
+  const totalPumps = pumpsData.length;
+  const activePumps = pumpsData.filter((p) => p.status === "Active").length;
+  const maintenanceRequired = pumpsData.filter((p) => p.status === "Maintenance").length;
+  const totalFuelDispensed = pumpsData.reduce((sum, pump) => sum + pump.totalDispensed, 0);
 
-    // Prepare chart data
-    const fuelByPump = pumpsData.map((pump) => ({
-        name: pump.location,
-        dispensed: pump.totalDispensed,
-    }));
+  // Prepare chart data
+  const fuelByPump = pumpsData.map((pump) => ({
+    name: pump.location,
+    dispensed: pump.totalDispensed,
+  }));
 
-    const statusDistribution = [
-        { name: "Active", value: activePumps },
-        { name: "Maintenance", value: maintenanceRequired },
-    ];
+  const statusDistribution = [
+    { name: "Active", value: activePumps },
+    { name: "Maintenance", value: maintenanceRequired },
+  ];
 
-    const generatePumpsPDF = () => {
-        const formatNumber = (num: number) => num.toLocaleString('en-PK');
+  const generatePumpsPDF = () => {
+    const formatNumber = (num: number) => num.toLocaleString('en-PK');
 
-        const htmlContent = `
+    const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -143,10 +145,10 @@ export function PumpsReport({ pumpsData }: PumpsReportProps) {
         <div class="header">
           <div class="title">⛽ Fuel POS Pumps Report</div>
           <div class="subtitle">Generated on ${new Date().toLocaleDateString('en-PK', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}</div>
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</div>
         </div>
 
         <div class="section">
@@ -206,155 +208,155 @@ export function PumpsReport({ pumpsData }: PumpsReportProps) {
       </html>
     `;
 
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-    };
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
+  };
 
-    return (
-        <div className="space-y-4">
-            {/* Metric Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Pumps</CardTitle>
-                        <Fuel className="h-4 w-4 text-primary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-primary">{totalPumps}</div>
-                        <p className="text-xs text-muted-foreground">All pumps</p>
-                    </CardContent>
-                </Card>
+  return (
+    <div className="space-y-4">
+      {/* Metric Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Pumps</CardTitle>
+            <Fuel className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">{totalPumps}</div>
+            <p className="text-xs text-muted-foreground">All pumps</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active Pumps</CardTitle>
-                        <Activity className="h-4 w-4 text-success" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-success">{activePumps}</div>
-                        <p className="text-xs text-muted-foreground">Currently active</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Pumps</CardTitle>
+            <Activity className="h-4 w-4 text-success" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-success">{activePumps}</div>
+            <p className="text-xs text-muted-foreground">Currently active</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Maintenance Required</CardTitle>
-                        <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-yellow-600">{maintenanceRequired}</div>
-                        <p className="text-xs text-muted-foreground">Needs attention</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Maintenance Required</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-yellow-600">{maintenanceRequired}</div>
+            <p className="text-xs text-muted-foreground">Needs attention</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Fuel Dispensed</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-secondary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-secondary">{totalFuelDispensed.toLocaleString()} L</div>
-                        <p className="text-xs text-muted-foreground">All time</p>
-                    </CardContent>
-                </Card>
-            </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Fuel Dispensed</CardTitle>
+            <TrendingUp className="h-4 w-4 text-secondary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-secondary">{totalFuelDispensed.toLocaleString()} L</div>
+            <p className="text-xs text-muted-foreground">All time</p>
+          </CardContent>
+        </Card>
+      </div>
 
-            {/* Charts */}
-            <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Fuel Dispensed by Pump</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={fuelByPump}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="dispensed" fill="#14b8a6" name="Fuel Dispensed (L)" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+      {/* Charts */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Fuel Dispensed by Pump</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={fuelByPump}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="dispensed" fill="#14b8a6" name="Fuel Dispensed (L)" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Pump Status Distribution</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={statusDistribution}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={80}
-                                    label
-                                >
-                                    {statusDistribution.map((_: any, index: number) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Pump Status Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={statusDistribution}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  {statusDistribution.map((_: { name: string; value: number }, index: number) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
 
-            {/* Pumps Table */}
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Pump Details</CardTitle>
-                    <Button variant="outline" size="sm" onClick={generatePumpsPDF}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                    </Button>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Pump ID</TableHead>
-                                <TableHead>Location</TableHead>
-                                <TableHead>Fuel Type</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Last Maintenance</TableHead>
-                                <TableHead>Total Dispensed</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {pumpsData.map((pump: any, index: number) => (
-                                <TableRow key={index}>
-                                    <TableCell className="font-medium">{pump.pumpId}</TableCell>
-                                    <TableCell>{pump.location}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{pump.fuelType}</Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant={pump.status === "Active" ? "default" : "secondary"}>
-                                            {pump.status}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>{format(new Date(pump.lastMaintenance), "MMM dd, yyyy")}</TableCell>
-                                    <TableCell>{pump.totalDispensed.toLocaleString()} L</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-        </div>
-    );
+      {/* Pumps Table */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Pump Details</CardTitle>
+          <Button variant="outline" size="sm" onClick={generatePumpsPDF}>
+            <Download className="mr-2 h-4 w-4" />
+            Download PDF
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Pump ID</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead>Fuel Type</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Last Maintenance</TableHead>
+                <TableHead>Total Dispensed</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {pumpsData.map((pump: PumpItem, index: number) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{pump.pumpId}</TableCell>
+                  <TableCell>{pump.location}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{pump.fuelType}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={pump.status === "Active" ? "default" : "secondary"}>
+                      {pump.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{format(new Date(pump.lastMaintenance), "MMM dd, yyyy")}</TableCell>
+                  <TableCell>{pump.totalDispensed.toLocaleString()} L</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

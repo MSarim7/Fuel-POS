@@ -10,39 +10,41 @@ import { format } from "date-fns";
 
 const COLORS = ['#14b8a6', '#06b6d4', '#0d9488', '#22d3ee', '#5eead4', '#2dd4bf'];
 
+import { ExpenseItem } from "./types";
+
 interface ExpenseReportProps {
-    expensesData: any[];
-    totalRevenue: number;
+  expensesData: ExpenseItem[];
+  totalRevenue: number;
 }
 
 export function ExpenseReport({ expensesData, totalRevenue }: ExpenseReportProps) {
-    // Calculate metrics
-    const totalExpenses = expensesData.reduce((sum, expense) => sum + expense.amount, 0);
-    const totalProfit = totalRevenue - totalExpenses;
-    const costOfGoodsSold = Math.floor(totalRevenue * 0.6); // Mock COGS
+  // Calculate metrics
+  const totalExpenses = expensesData.reduce((sum, expense) => sum + expense.amount, 0);
+  const totalProfit = totalRevenue - totalExpenses;
+  const costOfGoodsSold = Math.floor(totalRevenue * 0.6); // Mock COGS
 
-    // Prepare chart data
-    const expenseTrendData = expensesData.slice(0, 10).map((expense) => ({
-        date: format(new Date(expense.date), "MMM dd"),
-        amount: expense.amount,
-    }));
+  // Prepare chart data
+  const expenseTrendData = expensesData.slice(0, 10).map((expense) => ({
+    date: format(new Date(expense.date), "MMM dd"),
+    amount: expense.amount,
+  }));
 
-    const expenseByTypeData = expensesData.reduce((acc: any[], expense) => {
-        const existing = acc.find((item) => item.type === expense.category);
-        if (existing) {
-            existing.amount += expense.amount;
-        } else {
-            acc.push({ type: expense.category, amount: expense.amount });
-        }
-        return acc;
-    }, []);
+  const expenseByTypeData = expensesData.reduce((acc: { type: string; amount: number }[], expense) => {
+    const existing = acc.find((item) => item.type === expense.category);
+    if (existing) {
+      existing.amount += expense.amount;
+    } else {
+      acc.push({ type: expense.category, amount: expense.amount });
+    }
+    return acc;
+  }, []);
 
-    const generateExpensesPDF = () => {
-        const formatCurrency = (amount: number) => {
-            return `Rs. ${amount.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-        };
+  const generateExpensesPDF = () => {
+    const formatCurrency = (amount: number) => {
+      return `Rs. ${amount.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    };
 
-        const htmlContent = `
+    const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -149,10 +151,10 @@ export function ExpenseReport({ expensesData, totalRevenue }: ExpenseReportProps
         <div class="header">
           <div class="title">⛽ Fuel POS Expenses Report</div>
           <div class="subtitle">Generated on ${new Date().toLocaleDateString('en-PK', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}</div>
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</div>
         </div>
 
         <div class="section">
@@ -210,153 +212,153 @@ export function ExpenseReport({ expensesData, totalRevenue }: ExpenseReportProps
       </html>
     `;
 
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-    };
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
+  };
 
-    return (
-        <div className="space-y-4">
-            {/* Metric Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                        <DollarSign className="h-4 w-4 text-success" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-success">₨ {totalRevenue.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">From all sales</p>
-                    </CardContent>
-                </Card>
+  return (
+    <div className="space-y-4">
+      {/* Metric Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-success" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-success">₨ {totalRevenue.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">From all sales</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-                        <TrendingDown className="h-4 w-4 text-red-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-red-600">₨ {totalExpenses.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">Operating costs</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+            <TrendingDown className="h-4 w-4 text-red-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">₨ {totalExpenses.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Operating costs</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Gross Profit</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className={`text-2xl font-bold ${totalProfit >= 0 ? 'text-primary' : 'text-red-600'}`}>
-                            ₨ {totalProfit.toLocaleString()}
-                        </div>
-                        <p className="text-xs text-muted-foreground">Revenue - Expenses</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Cost of Goods Sold</CardTitle>
-                        <Receipt className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">₨ {costOfGoodsSold.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">Fuel costs</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Gross Profit</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className={`text-2xl font-bold ${totalProfit >= 0 ? 'text-primary' : 'text-red-600'}`}>
+              ₨ {totalProfit.toLocaleString()}
             </div>
+            <p className="text-xs text-muted-foreground">Revenue - Expenses</p>
+          </CardContent>
+        </Card>
 
-            {/* Charts */}
-            <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Expense Trend Over Time</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={expenseTrendData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="amount" fill="#14b8a6" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Cost of Goods Sold</CardTitle>
+            <Receipt className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">₨ {costOfGoodsSold.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Fuel costs</p>
+          </CardContent>
+        </Card>
+      </div>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Expenses by Category</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={expenseByTypeData}
-                                    dataKey="amount"
-                                    nameKey="type"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={80}
-                                    label
-                                >
-                                    {expenseByTypeData.map((_: any, index: number) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </div>
+      {/* Charts */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Expense Trend Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={expenseTrendData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="amount" fill="#14b8a6" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-            {/* Expenses Table */}
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Expense Details</CardTitle>
-                    <Button variant="outline" size="sm" onClick={generateExpensesPDF}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                    </Button>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Description</TableHead>
-                                <TableHead>Amount</TableHead>
-                                <TableHead>Location</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {expensesData.map((expense: any, idx: number) => (
-                                <TableRow key={idx}>
-                                    <TableCell className="font-medium">{format(new Date(expense.date), "MMM dd, yyyy")}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="destructive">{expense.category}</Badge>
-                                    </TableCell>
-                                    <TableCell>{expense.description || '-'}</TableCell>
-                                    <TableCell>₨ {expense.amount.toLocaleString()}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{expense.location}</Badge>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-        </div>
-    );
+        <Card>
+          <CardHeader>
+            <CardTitle>Expenses by Category</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={expenseByTypeData}
+                  dataKey="amount"
+                  nameKey="type"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  {expenseByTypeData.map((_: { type: string; amount: number }, index: number) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Expenses Table */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Expense Details</CardTitle>
+          <Button variant="outline" size="sm" onClick={generateExpensesPDF}>
+            <Download className="mr-2 h-4 w-4" />
+            Download PDF
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Location</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {expensesData.map((expense: ExpenseItem, idx: number) => (
+                <TableRow key={idx}>
+                  <TableCell className="font-medium">{format(new Date(expense.date), "MMM dd, yyyy")}</TableCell>
+                  <TableCell>
+                    <Badge variant="destructive">{expense.category}</Badge>
+                  </TableCell>
+                  <TableCell>{expense.description || '-'}</TableCell>
+                  <TableCell>₨ {expense.amount.toLocaleString()}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{expense.location}</Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

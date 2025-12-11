@@ -10,30 +10,32 @@ import { format } from "date-fns";
 
 const COLORS = ['#14b8a6', '#06b6d4', '#0d9488', '#22d3ee', '#5eead4', '#2dd4bf'];
 
+import { EmployerItem } from "./types";
+
 interface EmployerReportProps {
-    employersData: any[];
+  employersData: EmployerItem[];
 }
 
 export function EmployerReport({ employersData }: EmployerReportProps) {
-    // Calculate metrics
-    const totalEmployers = employersData.length;
-    const activeEmployers = employersData.filter((e) => e.status === "Active").length;
-    const inactiveEmployers = employersData.filter((e) => e.status === "Inactive").length;
-    const avgShifts = 22; // Mock data
+  // Calculate metrics
+  const totalEmployers = employersData.length;
+  const activeEmployers = employersData.filter((e) => e.status === "Active").length;
+  const inactiveEmployers = employersData.filter((e) => e.status === "Inactive").length;
+  const avgShifts = 22; // Mock data
 
-    // Prepare chart data
-    const employerDistribution = employersData.reduce((acc: any[], emp) => {
-        const existing = acc.find((item) => item.pump === emp.pump);
-        if (existing) {
-            existing.count += 1;
-        } else {
-            acc.push({ pump: emp.pump, count: 1 });
-        }
-        return acc;
-    }, []);
+  // Prepare chart data
+  const employerDistribution = employersData.reduce((acc: { pump: string; count: number }[], emp) => {
+    const existing = acc.find((item) => item.pump === emp.pump);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      acc.push({ pump: emp.pump, count: 1 });
+    }
+    return acc;
+  }, []);
 
-    const generateEmployersPDF = () => {
-        const htmlContent = `
+  const generateEmployersPDF = () => {
+    const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -141,10 +143,10 @@ export function EmployerReport({ employersData }: EmployerReportProps) {
         <div class="header">
           <div class="title">⛽ Fuel POS Employers Report</div>
           <div class="subtitle">Generated on ${new Date().toLocaleDateString('en-PK', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}</div>
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</div>
         </div>
 
         <div class="section">
@@ -183,7 +185,7 @@ export function EmployerReport({ employersData }: EmployerReportProps) {
               </tr>
             </thead>
             <tbody>
-              ${employersData.slice(0, 50).map(emp => `
+              ${employersData.slice(0, 50).map((emp: EmployerItem) => `
                 <tr>
                   <td><strong>${emp.employerName}</strong></td>
                   <td>${emp.pump}</td>
@@ -204,135 +206,135 @@ export function EmployerReport({ employersData }: EmployerReportProps) {
       </html>
     `;
 
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-    };
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
+  };
 
-    return (
-        <div className="space-y-4">
-            {/* Metric Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Employers</CardTitle>
-                        <Users className="h-4 w-4 text-secondary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-secondary">{totalEmployers}</div>
-                        <p className="text-xs text-muted-foreground">All employees</p>
-                    </CardContent>
-                </Card>
+  return (
+    <div className="space-y-4">
+      {/* Metric Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Employers</CardTitle>
+            <Users className="h-4 w-4 text-secondary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-secondary">{totalEmployers}</div>
+            <p className="text-xs text-muted-foreground">All employees</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active Employers</CardTitle>
-                        <Users className="h-4 w-4 text-success" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-success">{activeEmployers}</div>
-                        <p className="text-xs text-muted-foreground">Currently active</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Employers</CardTitle>
+            <Users className="h-4 w-4 text-success" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-success">{activeEmployers}</div>
+            <p className="text-xs text-muted-foreground">Currently active</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Inactive Employers</CardTitle>
-                        <AlertCircle className="h-4 w-4 text-red-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-red-600">{inactiveEmployers}</div>
-                        <p className="text-xs text-muted-foreground">Not active</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Inactive Employers</CardTitle>
+            <AlertCircle className="h-4 w-4 text-red-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{inactiveEmployers}</div>
+            <p className="text-xs text-muted-foreground">Not active</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Avg Shifts</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-primary" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-primary">{avgShifts}</div>
-                        <p className="text-xs text-muted-foreground">Per employer</p>
-                    </CardContent>
-                </Card>
-            </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Shifts</CardTitle>
+            <TrendingUp className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">{avgShifts}</div>
+            <p className="text-xs text-muted-foreground">Per employer</p>
+          </CardContent>
+        </Card>
+      </div>
 
-            {/* Employer Distribution Chart */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Employer Distribution by Pump</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <PieChart>
-                            <Pie
-                                data={employerDistribution}
-                                dataKey="count"
-                                nameKey="pump"
-                                cx="50%"
-                                cy="50%"
-                                outerRadius={80}
-                                label
-                            >
-                                {employerDistribution.map((_: any, index: number) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                            <Legend />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </CardContent>
-            </Card>
+      {/* Employer Distribution Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Employer Distribution by Pump</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={employerDistribution}
+                dataKey="count"
+                nameKey="pump"
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                label
+              >
+                {employerDistribution.map((_: { pump: string; count: number }, index: number) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
 
-            {/* Employers Table */}
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Employer Details</CardTitle>
-                    <Button variant="outline" size="sm" onClick={generateEmployersPDF}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                    </Button>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Pump</TableHead>
-                                <TableHead>Role</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Date Joined</TableHead>
-                                <TableHead>Status</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {employersData.map((employer: any, index: number) => (
-                                <TableRow key={index}>
-                                    <TableCell className="font-medium">{employer.employerName}</TableCell>
-                                    <TableCell>
-                                        <Badge>{employer.pump}</Badge>
-                                    </TableCell>
-                                    <TableCell>{employer.role}</TableCell>
-                                    <TableCell>{employer.email}</TableCell>
-                                    <TableCell>{format(new Date(employer.dateJoined), "MMM dd, yyyy")}</TableCell>
-                                    <TableCell>
-                                        <Badge variant={employer.status === "Active" ? "default" : "destructive"}>
-                                            {employer.status}
-                                        </Badge>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-        </div>
-    );
+      {/* Employers Table */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Employer Details</CardTitle>
+          <Button variant="outline" size="sm" onClick={generateEmployersPDF}>
+            <Download className="mr-2 h-4 w-4" />
+            Download PDF
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Pump</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Date Joined</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {employersData.map((employer: EmployerItem, index: number) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{employer.employerName}</TableCell>
+                  <TableCell>
+                    <Badge>{employer.pump}</Badge>
+                  </TableCell>
+                  <TableCell>{employer.role}</TableCell>
+                  <TableCell>{employer.email}</TableCell>
+                  <TableCell>{format(new Date(employer.dateJoined), "MMM dd, yyyy")}</TableCell>
+                  <TableCell>
+                    <Badge variant={employer.status === "Active" ? "default" : "destructive"}>
+                      {employer.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

@@ -10,40 +10,42 @@ import { format } from "date-fns";
 
 const COLORS = ['#14b8a6', '#06b6d4', '#0d9488', '#22d3ee'];
 
+import { SalesItem } from "./types";
+
 interface SalesReportProps {
-    salesData: any[];
+  salesData: SalesItem[];
 }
 
 export function SalesReport({ salesData }: SalesReportProps) {
-    // Calculate metrics
-    const totalRevenue = salesData.reduce((sum, sale) => sum + sale.totalPrice, 0);
-    const totalOrders = salesData.length;
-    const refundOrders = salesData.filter((s) => s.status === "Refunded").length;
-    const refundAmount = salesData.filter((s) => s.status === "Refunded").reduce((sum, s) => sum + s.totalPrice, 0);
-    const avgOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
+  // Calculate metrics
+  const totalRevenue = salesData.reduce((sum, sale) => sum + sale.totalPrice, 0);
+  const totalOrders = salesData.length;
+  const refundOrders = salesData.filter((s) => s.status === "Refunded").length;
+  const refundAmount = salesData.filter((s) => s.status === "Refunded").reduce((sum, s) => sum + s.totalPrice, 0);
+  const avgOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
 
-    // Prepare chart data
-    const salesTrendData = salesData.slice(0, 10).map((sale) => ({
-        date: format(new Date(sale.date), "MMM dd"),
-        sales: sale.totalPrice,
-    }));
+  // Prepare chart data
+  const salesTrendData = salesData.slice(0, 10).map((sale) => ({
+    date: format(new Date(sale.date), "MMM dd"),
+    sales: sale.totalPrice,
+  }));
 
-    const pumpRevenueData = salesData.reduce((acc: any[], sale) => {
-        const existing = acc.find((item) => item.name === sale.pump);
-        if (existing) {
-            existing.revenue += sale.totalPrice;
-        } else {
-            acc.push({ name: sale.pump, revenue: sale.totalPrice });
-        }
-        return acc;
-    }, []);
+  const pumpRevenueData = salesData.reduce((acc: { name: string; revenue: number }[], sale) => {
+    const existing = acc.find((item) => item.name === sale.pump);
+    if (existing) {
+      existing.revenue += sale.totalPrice;
+    } else {
+      acc.push({ name: sale.pump, revenue: sale.totalPrice });
+    }
+    return acc;
+  }, []);
 
-    const generateSalesPDF = () => {
-        const formatCurrency = (amount: number) => {
-            return `Rs. ${amount.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-        };
+  const generateSalesPDF = () => {
+    const formatCurrency = (amount: number) => {
+      return `Rs. ${amount.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    };
 
-        const htmlContent = `
+    const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -151,10 +153,10 @@ export function SalesReport({ salesData }: SalesReportProps) {
         <div class="header">
           <div class="title">⛽ Fuel POS Sales Report</div>
           <div class="subtitle">Generated on ${new Date().toLocaleDateString('en-PK', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}</div>
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</div>
         </div>
 
         <div class="section">
@@ -220,168 +222,168 @@ export function SalesReport({ salesData }: SalesReportProps) {
       </html>
     `;
 
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-    };
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
+  };
 
-    return (
-        <div className="space-y-4">
-            {/* Metric Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-primary">₨ {totalRevenue.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">+12.5% from last month</p>
-                    </CardContent>
-                </Card>
+  return (
+    <div className="space-y-4">
+      {/* Metric Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">₨ {totalRevenue.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">+12.5% from last month</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Orders Completed</CardTitle>
-                        <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{totalOrders}</div>
-                        <p className="text-xs text-muted-foreground">+8.2% from last month</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Orders Completed</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalOrders}</div>
+            <p className="text-xs text-muted-foreground">+8.2% from last month</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">₨ {avgOrderValue.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">+4.1% from last month</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">₨ {avgOrderValue.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">+4.1% from last month</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Refund Orders</CardTitle>
-                        <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{refundOrders}</div>
-                        <p className="text-xs text-muted-foreground">-2.3% from last month</p>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Refund Orders</CardTitle>
+            <AlertCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{refundOrders}</div>
+            <p className="text-xs text-muted-foreground">-2.3% from last month</p>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Refund Amount</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-red-600">₨ {refundAmount.toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">-5.7% from last month</p>
-                    </CardContent>
-                </Card>
-            </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Refund Amount</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">₨ {refundAmount.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">-5.7% from last month</p>
+          </CardContent>
+        </Card>
+      </div>
 
-            {/* Charts */}
-            <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Sales Trend Over Time</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={salesTrendData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line type="monotone" dataKey="sales" stroke="#14b8a6" strokeWidth={2} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+      {/* Charts */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Sales Trend Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={salesTrendData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="sales" stroke="#14b8a6" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Sales Share by Pump</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={pumpRevenueData}
-                                    dataKey="revenue"
-                                    nameKey="name"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={80}
-                                    label
-                                >
-                                    {pumpRevenueData.map((_: any, index: number) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Sales Share by Pump</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={pumpRevenueData}
+                  dataKey="revenue"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  {pumpRevenueData.map((_: { name: string; revenue: number }, index: number) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
 
-            {/* Sales Table */}
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Sales Orders</CardTitle>
-                    <Button variant="outline" size="sm" onClick={generateSalesPDF}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                    </Button>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Order ID</TableHead>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Fuel Type</TableHead>
-                                <TableHead>Quantity</TableHead>
-                                <TableHead>Total Price</TableHead>
-                                <TableHead>Pump</TableHead>
-                                <TableHead>Status</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {salesData.map((order: any) => (
-                                <TableRow key={order.orderId}>
-                                    <TableCell className="font-medium">{order.orderId}</TableCell>
-                                    <TableCell>{format(new Date(order.date), "MMM dd, yyyy")}</TableCell>
-                                    <TableCell>{order.fuelType}</TableCell>
-                                    <TableCell>{order.quantity} L</TableCell>
-                                    <TableCell>₨ {order.totalPrice.toLocaleString()}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{order.pump}</Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant={order.status === "Completed" ? "default" : "destructive"}>
-                                            {order.status}
-                                        </Badge>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-        </div>
-    );
+      {/* Sales Table */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Sales Orders</CardTitle>
+          <Button variant="outline" size="sm" onClick={generateSalesPDF}>
+            <Download className="mr-2 h-4 w-4" />
+            Download PDF
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Fuel Type</TableHead>
+                <TableHead>Quantity</TableHead>
+                <TableHead>Total Price</TableHead>
+                <TableHead>Pump</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {salesData.map((order: SalesItem) => (
+                <TableRow key={order.orderId}>
+                  <TableCell className="font-medium">{order.orderId}</TableCell>
+                  <TableCell>{format(new Date(order.date), "MMM dd, yyyy")}</TableCell>
+                  <TableCell>{order.fuelType}</TableCell>
+                  <TableCell>{order.quantity} L</TableCell>
+                  <TableCell>₨ {order.totalPrice.toLocaleString()}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{order.pump}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={order.status === "Completed" ? "default" : "destructive"}>
+                      {order.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

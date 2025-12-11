@@ -42,7 +42,7 @@ export default function EmployerSaleView() {
     const params = useParams();
     const pumpId = params?.pump as string;
     const employerId = params?.id as string;
-    const saleId = params?.saleId as string;
+    // const saleId = params?.saleId as string;
 
     // In real app, fetch sale by saleId
     const sale = mockSale;
