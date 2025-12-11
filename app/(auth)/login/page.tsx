@@ -29,11 +29,18 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    // Validate credentials before simulating API call
-    if (
-      formData.username !== 'admin' ||
-      formData.password !== '123456'
-    ) {
+    // Validate credentials
+    let isValid = false;
+
+    if (formData.userType === 'admin') {
+      // Admin credentials
+      isValid = formData.username === 'admin' && formData.password === '123456';
+    } else {
+      // Employer credentials
+      isValid = formData.username === 'employer1' && formData.password.length > 0;
+    }
+
+    if (!isValid) {
       setError('Invalid credentials');
       setLoading(false);
       return;
@@ -47,8 +54,10 @@ export default function LoginPage() {
         toast.success('Welcome, admin!');
         router.push('/admin/dashboard');
       } else {
-        toast.success('Welcome, employee!');
-        router.push('/employee/dashboard');
+        toast.success('Welcome, employer!');
+        // Redirect to employer dashboard with sample pump and employer IDs
+        // In production, these would come from the API response
+        router.push('/employer/pump-001/emp-001/sales');
       }
     } catch (err: unknown) {
       if (typeof err === 'object' && err !== null && 'message' in err) {
@@ -130,7 +139,7 @@ export default function LoginPage() {
                   disabled={loading}
                 >
                   <User className="mr-2 h-4 w-4" />
-                  Employee
+                  Employer
                 </Button>
               </div>
             </div>

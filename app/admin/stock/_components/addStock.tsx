@@ -92,14 +92,26 @@ const AddStock = () => {
                                     onValueChange={(value) => handleInputChange("fuelType", value)}
                                 >
                                     <SelectTrigger className="rounded-md">
-                                        <SelectValue placeholder="Select fuel type" />
+                                        <SelectValue placeholder="Select product / fuel type" />
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Petrol">Petrol</SelectItem>
+                                    <SelectContent className="max-h-60">
+                                        <div className="px-2 py-1.5 text-xs font-semibold text-[#64748b]">PETROL</div>
+                                        <SelectItem value="Regular Petrol">Regular Petrol</SelectItem>
+                                        <SelectItem value="Premium Petrol">Premium Petrol</SelectItem>
+                                        <SelectItem value="High-Octane Petrol">High-Octane Petrol</SelectItem>
+
+                                        <div className="px-2 py-1.5 text-xs font-semibold text-[#64748b] mt-2">DIESEL</div>
                                         <SelectItem value="Diesel">Diesel</SelectItem>
-                                        <SelectItem value="High-Octane">High-Octane</SelectItem>
-                                        <SelectItem value="Engine Oil">Engine Oil</SelectItem>
-                                        <SelectItem value="Lubricants">Lubricants</SelectItem>
+                                        <SelectItem value="Premium Diesel">Premium Diesel</SelectItem>
+
+                                        <div className="px-2 py-1.5 text-xs font-semibold text-[#64748b] mt-2">ENGINE OIL</div>
+                                        <SelectItem value="Mobil 1 5W-30">Mobil 1 5W-30</SelectItem>
+                                        <SelectItem value="Shell Helix Ultra">Shell Helix Ultra</SelectItem>
+                                        <SelectItem value="Castrol Edge">Castrol Edge</SelectItem>
+
+                                        <div className="px-2 py-1.5 text-xs font-semibold text-[#64748b] mt-2">LUBRICANTS</div>
+                                        <SelectItem value="Coolant">Coolant</SelectItem>
+                                        <SelectItem value="Brake Fluid">Brake Fluid</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>

@@ -17,6 +17,8 @@ const AddEmployer = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
+    username: "",
+    password: "",
     mobile: "",
     address: "",
     status: "",
@@ -101,6 +103,33 @@ const AddEmployer = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Enter email address"
+                  className="rounded-md"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="username">Username *</Label>
+                <Input
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="Enter username"
+                  className="rounded-md"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="password">Password *</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Enter password"
                   className="rounded-md"
                   required
                 />

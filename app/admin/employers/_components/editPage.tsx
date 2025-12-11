@@ -19,6 +19,8 @@ import { toast } from "sonner";
 type EmployerData = {
   fullName: string;
   email: string;
+  username?: string;
+  password?: string;
   mobile: string;
   address: string;
   fuelPump: string;
@@ -107,6 +109,35 @@ const EmployerEdit = ({ data }: { data: EmployerData }) => {
                 placeholder="Enter email"
                 className="rounded-md"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="username" className="text-sm font-medium text-[#020617]">
+                Username
+              </Label>
+              <Input
+                id="username"
+                value={formData.username || ""}
+                onChange={(e) => handleInputChange("username", e.target.value)}
+                placeholder="Enter username (optional)"
+                className="rounded-md"
+              />
+              <p className="text-xs text-muted-foreground">Leave blank to keep current username</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium text-[#020617]">
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                value={formData.password || ""}
+                onChange={(e) => handleInputChange("password", e.target.value)}
+                placeholder="Enter new password (optional)"
+                className="rounded-md"
+              />
+              <p className="text-xs text-muted-foreground">Leave blank to keep current password</p>
             </div>
 
             <div className="space-y-2">
