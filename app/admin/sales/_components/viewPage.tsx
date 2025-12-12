@@ -35,6 +35,12 @@ interface SaleDetails {
     grandTotal: number;
     paidAmount: number;
     notes: string;
+    logs: {
+        date: string;
+        amount: number;
+        action: string;
+        performedBy: string;
+    }[];
 }
 
 const SaleView = ({ data }: { data: SaleDetails }) => {
@@ -91,6 +97,12 @@ const SaleView = ({ data }: { data: SaleDetails }) => {
                         <h1 className="text-2xl font-bold text-[#020617]">Sale Details</h1>
                     </div>
                     <div className="flex items-center gap-3">
+                        <Button
+                            variant="outline"
+                            onClick={() => router.push(`/admin/sales/${data.id}/edit`)}
+                        >
+                            Edit
+                        </Button>
                         {status === "pending" ? (
                             <>
                                 <Button
@@ -271,6 +283,56 @@ const SaleView = ({ data }: { data: SaleDetails }) => {
                         <p className="text-base text-[#020617]">
                             {data.notes || "—"}
                         </p>
+                    </div>
+
+                    {/* Logs Section */}
+                    <div>
+                        <h2 className="text-lg font-semibold text-[#020617] mb-4 pb-2 border-b">
+                            Payment History
+                        </h2>
+                        <div className="space-y-4">
+                            {data.logs?.map((log, index) => (
+                                <div key={index} className="flex gap-4 relative">
+                                    {/* Timeline line */}
+                                    {index !== (data.logs?.length || 0) - 1 && (
+                                        <div className="absolute left-[19px] top-8 bottom-[-16px] w-[2px] bg-gray-100" />
+                                    )}
+
+                                    <div className="h-10 w-10 shrink-0 rounded-full bg-blue-50 flex items-center justify-center border border-blue-100">
+                                        <div className="h-2.5 w-2.5 rounded-full bg-blue-600" />
+                                    </div>
+                                    <div className="pt-2 w-full">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="font-medium text-[#020617]">{log.action}</p>
+                                                <p className="text-xs text-[#64748b] mt-0.5">by {log.performedBy}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="font-semibold text-[#14b8a6]">
+                                                    + ₨ {log.amount.toLocaleString()}
+                                                </p>
+                                                <p className="text-xs text-[#64748b] mt-0.5">{log.date}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            {!data.logs?.length && (
+                                <p className="text-sm text-[#64748b] italic">No payment history available.</p>
+                            )}
+
+                            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center bg-gray-50 p-4 rounded-lg">
+                                <div>
+                                    <p className="text-xs text-[#64748b] uppercase font-semibold">Remaining Balance</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className={`text-xl font-bold ${(data.grandTotal - (data.paidAmount || 0)) > 0 ? "text-red-500" : "text-green-600"
+                                        }`}>
+                                        ₨ {(data.grandTotal - (data.paidAmount || 0)).toLocaleString()}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </Card>
             </div>

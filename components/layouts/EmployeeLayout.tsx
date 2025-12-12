@@ -17,7 +17,7 @@ export const EmployeeLayout = ({ children }: EmployeeLayoutProps) => {
   const employerId = params?.id as string || "emp1";
 
   // Determine active page based on pathname
-  const activePage = pathname?.includes('/createSales') || pathname?.includes('/create')
+  const activePage = pathname?.includes('/createSales') || pathname?.includes('/create') || pathname?.includes('/checkout')
     ? 'create' as const
     : 'sales' as const;
 

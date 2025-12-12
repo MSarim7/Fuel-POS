@@ -18,6 +18,7 @@ interface Sale {
     id: string;
     products: string;
     amount: number;
+    paidAmount: number;
     paymentMethod: string;
     status: "Pending" | "Approved" | "Rejected";
     createdAt: string;
@@ -28,6 +29,7 @@ const mockSales: Sale[] = [
         id: "SALE-1718123456789",
         products: "Regular Petrol (15L), Premium Diesel (10L), Mobil 1 5W-30 (2L)",
         amount: 12550,
+        paidAmount: 12550,
         paymentMethod: "Cash",
         status: "Approved",
         createdAt: "Dec 10, 2024 — 02:45 PM",
@@ -36,6 +38,7 @@ const mockSales: Sale[] = [
         id: "SALE-1718123456790",
         products: "Diesel (20L)",
         amount: 6400,
+        paidAmount: 3000,
         paymentMethod: "Card",
         status: "Pending",
         createdAt: "Dec 10, 2024 — 03:15 PM",
@@ -44,6 +47,7 @@ const mockSales: Sale[] = [
         id: "SALE-1718123456791",
         products: "High-Octane Petrol (25L)",
         amount: 8750,
+        paidAmount: 8750,
         paymentMethod: "Cash",
         status: "Rejected",
         createdAt: "Dec 09, 2024 — 11:30 AM",
@@ -153,6 +157,7 @@ export default function EmployerSalesList() {
                                 <TableHead className="font-semibold text-[#020617]">Sale ID</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Products</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Amount (₨)</TableHead>
+                                <TableHead className="font-semibold text-[#020617]">Remaining (₨)</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Payment</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Status</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Sale Date & Time</TableHead>
@@ -168,6 +173,9 @@ export default function EmployerSalesList() {
                                     </TableCell>
                                     <TableCell className="text-[#020617] font-medium">
                                         ₨ {sale.amount.toLocaleString()}
+                                    </TableCell>
+                                    <TableCell className={`font-medium ${sale.amount - sale.paidAmount > 0 ? "text-red-500" : "text-green-600"}`}>
+                                        ₨ {(sale.amount - sale.paidAmount).toLocaleString()}
                                     </TableCell>
                                     <TableCell className="text-[#020617]">{sale.paymentMethod}</TableCell>
                                     <TableCell>{getStatusBadge(sale.status)}</TableCell>

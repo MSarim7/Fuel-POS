@@ -20,6 +20,20 @@ const mockSaleData = {
     grandTotal: 3500,
     paidAmount: 3500,
     notes: "Customer requested receipt copy via email.",
+    logs: [
+        {
+            date: "2024-01-15 09:30 AM",
+            amount: 2000,
+            action: "Initial Sale",
+            performedBy: "Employer: Ali Hassan"
+        },
+        {
+            date: "2024-01-15 10:00 AM",
+            amount: 1500,
+            action: "Payment Added",
+            performedBy: "Admin: Manager"
+        }
+    ]
 };
 
 const ViewSalePage = ({ params }: { params: { id: string } }) => {

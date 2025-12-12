@@ -20,7 +20,8 @@ type StockEditData = {
   id: string;
   fuelType: string;
   quantity: string;
-  pricePerLiter: string;
+  purchasePricePerLiter: string;
+  salePricePerLiter: string;
   purchaseDate: string;
   supplier: string;
   paymentType: string;
@@ -34,16 +35,22 @@ const StockEdit = ({ data }: { data: StockEditData }) => {
   const [formData, setFormData] = useState({
     fuelType: data.fuelType,
     quantity: data.quantity,
-    pricePerLiter: data.pricePerLiter,
+    purchasePricePerLiter: data.purchasePricePerLiter,
+    salePricePerLiter: data.salePricePerLiter,
     purchaseDate: data.purchaseDate,
     supplier: data.supplier,
     paymentType: data.paymentType,
     notes: data.notes,
   });
 
-  const totalAmount =
-    formData.quantity && formData.pricePerLiter
-      ? (parseFloat(formData.quantity) * parseFloat(formData.pricePerLiter)).toFixed(2)
+  const totalPurchaseAmount =
+    formData.quantity && formData.purchasePricePerLiter
+      ? (parseFloat(formData.quantity) * parseFloat(formData.purchasePricePerLiter)).toFixed(2)
+      : "0.00";
+
+  const totalSaleAmount =
+    formData.quantity && formData.salePricePerLiter
+      ? (parseFloat(formData.quantity) * parseFloat(formData.salePricePerLiter)).toFixed(2)
       : "0.00";
 
   const handleInputChange = (field: string, value: string) => {
@@ -53,10 +60,10 @@ const StockEdit = ({ data }: { data: StockEditData }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.fuelType || !formData.quantity || !formData.pricePerLiter || !formData.purchaseDate) {
+    if (!formData.fuelType || !formData.quantity || !formData.purchasePricePerLiter || !formData.salePricePerLiter || !formData.purchaseDate) {
       toast({
         title: "Missing Required Fields",
-        description: "Please fill in all required fields.",
+        description: "Please fill in all required fields including Purchase and Sales prices.",
         variant: "destructive",
       });
       return;
@@ -130,30 +137,59 @@ const StockEdit = ({ data }: { data: StockEditData }) => {
                 />
               </div>
 
+              {/* Purchase Price Section */}
               <div className="space-y-2">
-                <Label htmlFor="pricePerLiter" className="text-[#020617]">
-                  Price Per Liter (Rs.) <span className="text-red-500">*</span>
+                <Label htmlFor="purchasePricePerLiter" className="text-[#020617]">
+                  Purchase Price Per Liter (Rs.) <span className="text-red-500">*</span>
                 </Label>
                 <Input
-                  id="pricePerLiter"
+                  id="purchasePricePerLiter"
                   type="number"
-                  value={formData.pricePerLiter}
-                  onChange={(e) => handleInputChange("pricePerLiter", e.target.value)}
-                  placeholder="Enter price per liter"
+                  value={formData.purchasePricePerLiter}
+                  onChange={(e) => handleInputChange("purchasePricePerLiter", e.target.value)}
+                  placeholder="Enter purchase price"
                   className="rounded-md"
                   min="0"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="totalAmount" className="text-[#020617]">
-                  Total Amount (Rs.)
+                <Label htmlFor="totalPurchaseAmount" className="text-[#020617]">
+                  Total Purchase Amount (Rs.)
                 </Label>
                 <Input
-                  id="totalAmount"
-                  value={`Rs.${Number(totalAmount).toLocaleString()}`}
+                  id="totalPurchaseAmount"
+                  value={`Rs. ${Number(totalPurchaseAmount).toLocaleString()}`}
                   readOnly
-                  className="rounded-md bg-gray-50 text-[#020617] font-medium"
+                  className="rounded-md bg-green-50 text-green-700 font-medium border-green-200"
+                />
+              </div>
+
+              {/* Sale Price Section */}
+              <div className="space-y-2">
+                <Label htmlFor="salePricePerLiter" className="text-[#020617]">
+                  Sale Price Per Liter (Rs.) <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="salePricePerLiter"
+                  type="number"
+                  value={formData.salePricePerLiter}
+                  onChange={(e) => handleInputChange("salePricePerLiter", e.target.value)}
+                  placeholder="Enter sale price"
+                  className="rounded-md"
+                  min="0"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="totalSaleAmount" className="text-[#020617]">
+                  Total Estimated Sale Amount (Rs.)
+                </Label>
+                <Input
+                  id="totalSaleAmount"
+                  value={`Rs. ${Number(totalSaleAmount).toLocaleString()}`}
+                  readOnly
+                  className="rounded-md bg-blue-50 text-blue-700 font-medium border-blue-200"
                 />
               </div>
 

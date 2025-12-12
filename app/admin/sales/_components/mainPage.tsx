@@ -27,6 +27,7 @@ interface Sale {
     pump: string;
     employer: string;
     amount: number;
+    paidAmount: number;
     paymentMethod: string;
     status: "pending" | "approved" | "rejected";
     createdAt: string;
@@ -39,6 +40,7 @@ const initialSales: Sale[] = [
         pump: "Fuel Pump A",
         employer: "Ali Hassan",
         amount: 3500,
+        paidAmount: 3500,
         paymentMethod: "Cash",
         status: "pending",
         createdAt: "2024-01-15 09:30 AM",
@@ -49,6 +51,7 @@ const initialSales: Sale[] = [
         pump: "Fuel Pump B",
         employer: "Ahmed Khan",
         amount: 5800,
+        paidAmount: 5800,
         paymentMethod: "Card",
         status: "approved",
         createdAt: "2024-01-15 10:15 AM",
@@ -59,6 +62,7 @@ const initialSales: Sale[] = [
         pump: "Fuel Pump A",
         employer: "Sara Ahmed",
         amount: 4200,
+        paidAmount: 0,
         paymentMethod: "Cash",
         status: "rejected",
         createdAt: "2024-01-14 03:45 PM",
@@ -69,6 +73,7 @@ const initialSales: Sale[] = [
         pump: "Fuel Pump C",
         employer: "Ali Hassan",
         amount: 7500,
+        paidAmount: 5000,
         paymentMethod: "Mobile Payment",
         status: "pending",
         createdAt: "2024-01-14 11:20 AM",
@@ -79,6 +84,7 @@ const initialSales: Sale[] = [
         pump: "Fuel Pump B",
         employer: "Fatima Noor",
         amount: 1800,
+        paidAmount: 1800,
         paymentMethod: "Cash",
         status: "approved",
         createdAt: "2024-01-13 02:00 PM",
@@ -225,6 +231,7 @@ const Sales = () => {
                                 <TableHead className="font-semibold text-[#020617]">Pump</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Employer</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Amount (Rs.)</TableHead>
+                                <TableHead className="font-semibold text-[#020617]">Remaining (Rs.)</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Payment</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Status</TableHead>
                                 <TableHead className="font-semibold text-[#020617]">Sale Date & Time</TableHead>
@@ -242,6 +249,9 @@ const Sales = () => {
                                     <TableCell className="text-[#020617]">{sale.employer}</TableCell>
                                     <TableCell className="text-[#020617] font-medium">
                                         Rs. {sale.amount.toLocaleString()}
+                                    </TableCell>
+                                    <TableCell className={`font-medium ${sale.amount - sale.paidAmount > 0 ? "text-red-500" : "text-green-600"}`}>
+                                        Rs. {(sale.amount - sale.paidAmount).toLocaleString()}
                                     </TableCell>
                                     <TableCell className="text-[#020617]">{sale.paymentMethod}</TableCell>
                                     <TableCell>{getStatusBadge(sale.status)}</TableCell>

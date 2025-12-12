@@ -36,16 +36,11 @@ interface Product {
 }
 
 const mockProducts: Product[] = [
-    { name: "Regular Petrol", category: "Petrol", rate: 289.50, unit: "L", defaultUnit: "L" },
-    { name: "Premium Petrol", category: "Petrol", rate: 309.75, unit: "L", defaultUnit: "L" },
-    { name: "High-Octane Petrol", category: "Petrol", rate: 349.90, unit: "L", defaultUnit: "L" },
+    { name: "Petrol", category: "Petrol", rate: 289.50, unit: "L", defaultUnit: "L" },
     { name: "Diesel", category: "Diesel", rate: 319.25, unit: "L", defaultUnit: "L" },
-    { name: "Premium Diesel", category: "Diesel", rate: 339.80, unit: "L", defaultUnit: "L" },
-    { name: "Mobil 1 5W-30", category: "Engine Oil", rate: 2499.99, unit: "L", defaultUnit: "L" },
-    { name: "Shell Helix Ultra", category: "Engine Oil", rate: 2199.50, unit: "L", defaultUnit: "L" },
-    { name: "Castrol Edge", category: "Engine Oil", rate: 2799.75, unit: "L", defaultUnit: "L" },
-    { name: "Coolant", category: "Lubricants", rate: 799.99, unit: "L", defaultUnit: "L" },
-    { name: "Brake Fluid", category: "Lubricants", rate: 449.50, unit: "mL", defaultUnit: "mL" },
+    { name: "High-Octane", category: "High-Octane", rate: 349.90, unit: "L", defaultUnit: "L" },
+    { name: "Engine Oil", category: "Engine Oil", rate: 2199.50, unit: "L", defaultUnit: "L" },
+    { name: "Lubricants", category: "Lubricants", rate: 799.99, unit: "L", defaultUnit: "L" },
 ];
 
 export default function CreateSale() {
@@ -226,28 +221,9 @@ export default function CreateSale() {
                                             <SelectValue placeholder="Select product or fuel type" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-white max-h-60">
-                                            <div className="px-2 py-1.5 text-xs font-semibold text-[#64748b]">PETROL</div>
-                                            {mockProducts.filter(p => p.category === "Petrol").map((product) => (
+                                            {mockProducts.map((product) => (
                                                 <SelectItem key={product.name} value={product.name}>
-                                                    {product.name} - ₨{product.rate}/{product.unit}
-                                                </SelectItem>
-                                            ))}
-                                            <div className="px-2 py-1.5 text-xs font-semibold text-[#64748b] mt-2">DIESEL</div>
-                                            {mockProducts.filter(p => p.category === "Diesel").map((product) => (
-                                                <SelectItem key={product.name} value={product.name}>
-                                                    {product.name} - ₨{product.rate}/{product.unit}
-                                                </SelectItem>
-                                            ))}
-                                            <div className="px-2 py-1.5 text-xs font-semibold text-[#64748b] mt-2">ENGINE OIL</div>
-                                            {mockProducts.filter(p => p.category === "Engine Oil").map((product) => (
-                                                <SelectItem key={product.name} value={product.name}>
-                                                    {product.name} - ₨{product.rate}/{product.unit}
-                                                </SelectItem>
-                                            ))}
-                                            <div className="px-2 py-1.5 text-xs font-semibold text-[#64748b] mt-2">LUBRICANTS</div>
-                                            {mockProducts.filter(p => p.category === "Lubricants").map((product) => (
-                                                <SelectItem key={product.name} value={product.name}>
-                                                    {product.name} - ₨{product.rate}/{product.unit}
+                                                    {product.name}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
