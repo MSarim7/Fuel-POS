@@ -6,12 +6,32 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Save, Calculator } from "lucide-react";
+import { ArrowLeft, Calculator } from "lucide-react";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+// Define types
+interface SaleItem {
+    id: string;
+    name: string;
+    category?: string;
+    quantity: number;
+    rate: number;
+    total: number;
+    productName?: string;
+}
+
+interface Sale {
+    id: string;
+    customerName: string;
+    items: SaleItem[];
+    totalAmount: number;
+    paidAmount: number;
+    status: string;
+}
+
 // Mock database - synced with mainPage.tsx
-const mockDatabase = [
+const mockDatabase: Sale[] = [
     {
         id: "SALE-1718123456789",
         customerName: "Walk-in Customer",
@@ -49,11 +69,11 @@ const mockDatabase = [
 export default function EmployerEditSale() {
     const router = useRouter();
     const params = useParams();
-    const pumpId = params?.pump as string;
-    const employerId = params?.id as string;
+    // const pumpId = params?.pump as string; // unused
+    // const employerId = params?.id as string; // unused
     const saleId = params?.saleId as string;
 
-    const [sale, setSale] = useState<any>(null);
+    const [sale, setSale] = useState<Sale | null>(null);
     const [newPayment, setNewPayment] = useState<number>(0);
     const [loading, setLoading] = useState(false);
 
@@ -138,7 +158,7 @@ export default function EmployerEditSale() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {sale.items.map((item: any) => (
+                                    {sale.items.map((item: SaleItem) => (
                                         <TableRow key={item.id || item.productName}>
                                             <TableCell>
                                                 <div className="font-medium">{item.name || item.productName}</div>

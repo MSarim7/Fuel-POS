@@ -198,7 +198,7 @@ export default function EmployerSaleView() {
                             Payment Logs
                         </h2>
                         <div className="space-y-4">
-                            {/* @ts-ignore */}
+
                             {sale.logs?.map((log, index) => (
                                 <div key={index} className="flex gap-4 relative">
                                     {/* Timeline line */}

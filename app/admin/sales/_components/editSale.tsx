@@ -10,8 +10,25 @@ import { ArrowLeft, Calculator } from "lucide-react";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+// Define types
+interface SaleItem {
+    name: string;
+    quantity: number;
+    rate: number;
+    total: number;
+}
+
+interface Sale {
+    id: string;
+    customerName: string;
+    items: SaleItem[];
+    totalAmount: number;
+    paidAmount: number;
+    status: string;
+}
+
 // Mock database - synced with mainPage.tsx
-const mockDatabase = [
+const mockDatabase: Sale[] = [
     {
         id: "SL001",
         customerName: "Muhammad Usman",
@@ -71,7 +88,7 @@ export default function AdminEditSale() {
     const params = useParams();
     const saleId = params?.id as string;
 
-    const [sale, setSale] = useState<any>(null);
+    const [sale, setSale] = useState<Sale | null>(null);
     const [newPayment, setNewPayment] = useState<number>(0);
     const [loading, setLoading] = useState(false);
 
@@ -155,7 +172,7 @@ export default function AdminEditSale() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {sale.items.map((item: any, idx: number) => (
+                                {sale.items.map((item: SaleItem, idx: number) => (
                                     <TableRow key={idx}>
                                         <TableCell>
                                             <div className="font-medium">{item.name}</div>
